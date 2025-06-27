@@ -1,12 +1,13 @@
 using UnityEngine;
 
-public class SimpleMover : MonoBehaviour
+public class MovableItem : MonoBehaviour
 {
     // public float speedScale = 1;
-    public float moveSpeed = 2f;
+    private float moveSpeed = 2f;
     public float minChangeDirTime = 1f;
     public float maxChangeDirTime = 3f;
-    public float settleTimer = 0;
+    private float settleTimer = 0;
+
 
     private Vector2 moveDirection;
     private float changeDirTimer;
@@ -14,12 +15,12 @@ public class SimpleMover : MonoBehaviour
     void Awake()
     {
         moveSpeed = GetComponent<DraggableItem>().ItemData.moveSpeed;
+
     }
 
     void Start()
     {
         PickNewDirection();
-
     }
 
     void Update()
@@ -28,14 +29,15 @@ public class SimpleMover : MonoBehaviour
         bool isMoving = IsDragging && (settleTimer == 0);
         if (true)
         {
-            UnityEngine.Vector3 newPos = moveDirection * moveSpeed * Time.deltaTime;
+            UnityEngine.Vector2 newPos = moveDirection * moveSpeed * Time.deltaTime;
             transform.Translate(newPos);
-            Debug.Log(newPos);
+
+            CheckScreenEdgeBounce();
 
             changeDirTimer -= Time.deltaTime;
             if (changeDirTimer <= 0)
             {
-                PickNewDirection();
+                // PickNewDirection();
             }
         }
 
@@ -45,24 +47,33 @@ public class SimpleMover : MonoBehaviour
     {
         float angle = Random.Range(0f, 360f);
         moveDirection = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
-        Debug.Log("New Direction");
-        Debug.Log(moveDirection);
         changeDirTimer = Random.Range(minChangeDirTime, maxChangeDirTime);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void CheckScreenEdgeBounce()
     {
-        // 获取法线方向
-        Vector2 normal = collision.contacts[0].normal;
+        Vector3 viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        bool bounced = false;
 
-        // 法线方向 ±60° 随机一个方向
-        float baseAngle = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg + 180f; // 反向朝法线走
-        float offset = Random.Range(-60f, 60f);
-        float newAngle = baseAngle + offset;
+        // 左右碰撞
+        if (viewPos.x <= 0f || viewPos.x >= 1f)
+        {
+            moveDirection.x = -moveDirection.x;
+            bounced = true;
+        }
 
-        moveDirection = new Vector2(Mathf.Cos(newAngle * Mathf.Deg2Rad), Mathf.Sin(newAngle * Mathf.Deg2Rad)).normalized;
+        // 上下碰撞
+        if (viewPos.y <= 0f || viewPos.y >= 1f)
+        {
+            moveDirection.y = -moveDirection.y;
+            bounced = true;
+        }
 
-        changeDirTimer = Random.Range(minChangeDirTime, maxChangeDirTime); // 碰撞也重置时间
+        if (bounced)
+        {
+            moveDirection = moveDirection.normalized;
+            changeDirTimer = Random.Range(minChangeDirTime, maxChangeDirTime);
+        }
     }
 
     public void Settle()
