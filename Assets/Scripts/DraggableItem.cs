@@ -86,7 +86,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             transform.position = ItemData.correctPosition;
             IsSnapped = true;
-            GetComponent<SimpleMover>().Settle();
+            GetComponent<MovableItem>().Settle();
         }
         else
         {
