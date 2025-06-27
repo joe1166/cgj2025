@@ -11,7 +11,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool IsSnapped = false;  // 正确吸附属性
     public bool IsDragging = false;
 
-
     private Vector3 _offset;
 
 
@@ -64,7 +63,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         Debug.Log("OnBeginDrag called!");
         // 防止二次拖拽
-        if (IsDragging) return;
+        if (IsDragging || IsSnapped) return;
         IsDragging = true;
 
         _offset = transform.position - Camera.main.ScreenToWorldPoint(eventData.position);
@@ -87,6 +86,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             transform.position = ItemData.correctPosition;
             IsSnapped = true;
+            GetComponent<SimpleMover>().Settle();
         }
         else
         {
