@@ -24,9 +24,9 @@ public class SimpleMover : MonoBehaviour
 
     void Update()
     {
-        IsDragging = GetComponent<DraggableItem>().IsDragging;
+        bool IsDragging = GetComponent<DraggableItem>().IsDragging;
         bool isMoving = IsDragging && (settleTimer == 0);
-        if (isMoving)
+        if (true)
         {
             UnityEngine.Vector3 newPos = moveDirection * moveSpeed * Time.deltaTime;
             transform.Translate(newPos);
