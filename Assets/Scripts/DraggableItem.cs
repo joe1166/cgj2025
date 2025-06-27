@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(Collider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public ItemData ItemData; // 物品数据ScriptableObject
     public float SnapRange = 0.5f; // 吸附范围
     public bool IsSnapped = false;  // 正确吸附属性
+    public bool IsDragging = false;
 
-    private bool _isDragging = false;
+
     private Vector3 _offset;
 
 
@@ -26,6 +27,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (sr != null && ItemData != null && ItemData.itemSprite != null)
         {
             sr.sprite = ItemData.itemSprite;
+
+            // 根据图片轮廓自动设置多边形碰撞器
+            SetupPolygonCollider();
         }
         else
         {
@@ -33,12 +37,35 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
+    private void SetupPolygonCollider()
+    {
+        // 添加多边形碰撞器
+        var polygonCollider = gameObject.AddComponent<PolygonCollider2D>();
+
+        // 获取sprite的轮廓路径
+
+        var sprite = GetComponent<SpriteRenderer>().sprite;
+        if (sprite != null)
+        {
+            // 设置多边形碰撞器的路径为sprite的轮廓
+            polygonCollider.pathCount = sprite.GetPhysicsShapeCount();
+
+
+            for (int i = 0; i < polygonCollider.pathCount; i++)
+            {
+                var points = new List<Vector2>();
+                sprite.GetPhysicsShape(i, points);
+                polygonCollider.SetPath(i, points.ToArray());
+            }
+        }
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag called!");
         // 防止二次拖拽
-        if (_isDragging) return;
-        _isDragging = true;
+        if (IsDragging) return;
+        IsDragging = true;
 
         _offset = transform.position - Camera.main.ScreenToWorldPoint(eventData.position);
     }
@@ -54,7 +81,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag called!");
-        _isDragging = false;
+        IsDragging = false;
         // 判断是否在吸附范围内
         if (ItemData != null && Vector2.Distance(transform.position, ItemData.correctPosition) <= SnapRange)
         {
