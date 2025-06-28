@@ -36,6 +36,7 @@ public class PositionManager : MonoBehaviour
             return;
         }
 
+        var count = 0;
         foreach (ItemData itemData in levelItems)
         {
             if (itemData == null)
@@ -60,6 +61,9 @@ public class PositionManager : MonoBehaviour
                 itemInstance = Instantiate(itemPrefab, transform);
             }
 
+            // 改变物品渲染层数（保证物品和它的附件 如腿 不会出现随机遮挡）
+            itemInstance.GetComponent<SpriteRenderer>().sortingOrder = count * 5;
+
             // 获取DraggableItem组件
             DraggableItem draggableItem = itemInstance.GetComponent<DraggableItem>();
 
@@ -68,6 +72,8 @@ public class PositionManager : MonoBehaviour
             draggableItem.Init();
 
             Debug.Log($"成功创建物品: {itemData.itemName}");
+
+            count += 1;
         }
 
         Debug.Log($"关卡物品创建完成，共创建了 {levelItems.Count} 个物品");
