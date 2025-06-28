@@ -38,8 +38,10 @@ public class ShakableDraggableItem : DraggableItem
     }
 
 
-    public override void InitAfterHook()
+    public override void Init()
     {
+        base.Init();
+        
         lastMousePosition = Input.mousePosition;
     }
 

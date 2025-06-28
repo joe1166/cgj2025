@@ -26,6 +26,11 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
 
+    // 计时器相关
+    private float levelStartTime = 0f;
+    private float levelElapsedTime = 0f;
+    private bool isTimerRunning = false;
+
     // 事件
     public System.Action<int> OnLevelChanged;
     public System.Action<GameState> OnGameStateChanged;
@@ -80,6 +85,7 @@ public class GameManager : MonoBehaviour
             CurrentLevel = levelIndex;
             OnLevelChanged?.Invoke(CurrentLevel);
             SetGameState(GameState.Playing);
+            ResetTimer(); // 重置计时器
             StartCoroutine(LoadLevelCoroutine(levelIndex));
         }
         else
@@ -94,6 +100,9 @@ public class GameManager : MonoBehaviour
         string sceneName = $"Level{levelIndex}";
         yield return StartCoroutine(LoadSceneCoroutine(sceneName));
         Debug.Log($"加载关卡 {levelIndex} 完成");
+
+        // 关卡加载完成后开始计时
+        StartTimer();
     }
 
     // 通用场景加载协程
@@ -222,6 +231,7 @@ public class GameManager : MonoBehaviour
     {
         CurrentGameState = GameState.MainMenu;
         OnGameStateChanged?.Invoke(CurrentGameState);
+        StopTimer(); // 停止计时
         StartCoroutine(LoadMainMenuCoroutine());
     }
 
@@ -236,6 +246,7 @@ public class GameManager : MonoBehaviour
     {
         SetGameState(GameState.Paused);
         Time.timeScale = 0f;
+        PauseTimer(); // 暂停计时
     }
 
     // 恢复游戏
@@ -243,6 +254,7 @@ public class GameManager : MonoBehaviour
     {
         SetGameState(GameState.Playing);
         Time.timeScale = 1f;
+        ResumeTimer(); // 恢复计时
     }
 
     // 关卡完成
@@ -250,6 +262,7 @@ public class GameManager : MonoBehaviour
     {
         SetGameState(GameState.LevelComplete);
         Time.timeScale = 0f;
+        StopTimer(); // 停止计时
         // 可以在这里添加关卡完成的效果、音效等
     }
 
@@ -257,6 +270,7 @@ public class GameManager : MonoBehaviour
     public void GameComplete()
     {
         Debug.Log("恭喜通关！");
+        StopTimer(); // 停止计时
         // 可以在这里添加通关奖励、返回主菜单等逻辑
         ReturnToMainMenu();
     }
@@ -278,5 +292,88 @@ public class GameManager : MonoBehaviour
     public bool IsLastLevel()
     {
         return CurrentLevel >= TotalLevels;
+    }
+
+    // 计时器相关方法
+    /// <summary>
+    /// 获取当前关卡用时（秒）
+    /// </summary>
+    public float GetCurrentLevelTime()
+    {
+        if (isTimerRunning)
+        {
+            return Time.time - levelStartTime;
+        }
+        return levelElapsedTime;
+    }
+
+    /// <summary>
+    /// 获取格式化的时间字符串 (MM:SS)
+    /// </summary>
+    public string GetFormattedTime()
+    {
+        float time = GetCurrentLevelTime();
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    /// <summary>
+    /// 开始计时
+    /// </summary>
+    private void StartTimer()
+    {
+        levelStartTime = Time.time;
+        isTimerRunning = true;
+        Debug.Log("关卡计时开始");
+    }
+
+    /// <summary>
+    /// 暂停计时
+    /// </summary>
+    private void PauseTimer()
+    {
+        if (isTimerRunning)
+        {
+            levelElapsedTime = Time.time - levelStartTime;
+            isTimerRunning = false;
+            Debug.Log($"关卡计时暂停，当前用时: {GetFormattedTime()}");
+        }
+    }
+
+    /// <summary>
+    /// 恢复计时
+    /// </summary>
+    private void ResumeTimer()
+    {
+        if (!isTimerRunning && CurrentGameState == GameState.Playing)
+        {
+            levelStartTime = Time.time - levelElapsedTime;
+            isTimerRunning = true;
+            Debug.Log("关卡计时恢复");
+        }
+    }
+
+    /// <summary>
+    /// 停止计时
+    /// </summary>
+    private void StopTimer()
+    {
+        if (isTimerRunning)
+        {
+            levelElapsedTime = Time.time - levelStartTime;
+            isTimerRunning = false;
+            Debug.Log($"关卡计时结束，总用时: {GetFormattedTime()}");
+        }
+    }
+
+    /// <summary>
+    /// 重置计时器
+    /// </summary>
+    private void ResetTimer()
+    {
+        levelElapsedTime = 0f;
+        isTimerRunning = false;
+        Debug.Log("关卡计时器重置");
     }
 }
