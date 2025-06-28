@@ -16,5 +16,5 @@ MonoBehaviour:
   itemName: "\u786C\u5E01"
   correctPosition: {x: 0, y: 0}
   itemSprite: {fileID: 21300000, guid: 2cfabe4352e1f0540bfcf6bc3b80d83c, type: 3}
-  moveSpeed: 0
-  settleTime: 0
+  moveSpeed: 3
+  settleTime: 10
