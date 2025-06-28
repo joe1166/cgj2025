@@ -376,10 +376,12 @@ public class LegsManager : MonoBehaviour
         if (leftLegRenderer != null)
         {
             leftLegRenderer.sortingLayerName = sortingLayer;
+            leftLegRenderer.sortingOrder = 100;
         }
         if (rightLegRenderer != null)
         {
             rightLegRenderer.sortingLayerName = sortingLayer;
+            rightLegRenderer.sortingOrder = 100;
         }
 
         Debug.Log($"LegsManager: 设置腿部排序层为 {sortingLayer}");
