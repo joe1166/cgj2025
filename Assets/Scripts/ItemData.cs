@@ -10,8 +10,8 @@ public class ItemData : ScriptableObject
     public Quaternion rotation;
     public Vector3 scale;
     public Sprite itemSprite;
-    public float moveSpeed;
-    public float settleTime;
+    public float moveSpeed = 2f;
+    public float settleTime = 20f;
     public float SnapRange = 0.5f;
 
 
