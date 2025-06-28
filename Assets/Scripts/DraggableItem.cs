@@ -16,58 +16,74 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public float maxDialogueInterval = 15f; // 最大台词间隔时间
     public float dialogueDisplayTime = 3f; // 台词显示时间
 
+    [Header("排序层设置")]
+    public string dragSortingLayer = "Drag"; // 拖拽时的排序层
+    public string itemSortingLayer = "Item"; // 放置后的排序层
+    public string itemMoveSortingLayer = "ItemMove"; // 移动时的排序层
+
     private Vector3 _offset;
     private float dialogueTimer = 0f; // 台词计时器
     private float nextDialogueTime = 0f; // 下次说台词的时间
     private bool isShowingDialogue = false; // 是否正在显示台词
+    private SpriteRenderer spriteRenderer; // 缓存SpriteRenderer组件
 
     public void Init()
     {
-        var sr = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (sr == null)
+        if (spriteRenderer == null)
         {
             Debug.LogError($"错误: GameObject {gameObject.name} 没有SpriteRenderer组件");
+            return;
         }
-        else if (ItemData == null)
+
+
+        if (ItemData == null)
         {
             Debug.LogError($"错误: GameObject {gameObject.name} 的ItemData为空");
+            return;
         }
-        else if (ItemData.itemSprite == null)
+
+
+        if (ItemData.itemSprite == null)
         {
             Debug.LogError($"错误: ItemData {ItemData.name} 的itemSprite为空");
+            return;
         }
-        else
+
+        // 设置sprite
+        spriteRenderer.sprite = ItemData.itemSprite;
+
+        // 应用ItemData中的旋转和缩放
+        if (ItemData.rotation != Quaternion.identity)
         {
-            sr.sprite = ItemData.itemSprite;
-
-            // 应用ItemData中的旋转和缩放
-            if (ItemData.rotation != Quaternion.identity)
-            {
-                transform.rotation = ItemData.rotation;
-            }
-            if (ItemData.scale != Vector3.one)
-            {
-                transform.localScale = ItemData.scale;
-            }
-
-            transform.position = ItemData.correctPositions[0];
-
-            // 根据图片轮廓自动设置多边形碰撞器
-            SetupPolygonCollider();
-
-            // 创建文本显示
-            CreateItemText();
-
-            GetComponent<MovableItem>().Init();
-
-            // 设置初始台词时间
-            if (!string.IsNullOrEmpty(ItemData.dialogue))
-            {
-                float randomInterval = Random.Range(minDialogueInterval, maxDialogueInterval);
-                nextDialogueTime = Time.time + randomInterval;
-            }
+            transform.rotation = ItemData.rotation;
         }
+        if (ItemData.scale != Vector3.one)
+        {
+            transform.localScale = ItemData.scale;
+        }
+
+        transform.position = ItemData.correctPositions[0];
+
+        // 根据图片轮廓自动设置多边形碰撞器
+        SetupPolygonCollider();
+
+        // 创建文本显示
+        CreateItemText();
+
+        GetComponent<MovableItem>().Init();
+
+        // 设置初始台词时间
+        if (!string.IsNullOrEmpty(ItemData.dialogue))
+        {
+            float randomInterval = Random.Range(minDialogueInterval, maxDialogueInterval);
+            nextDialogueTime = Time.time + randomInterval;
+        }
+
+        // 设置初始排序层为移动层
+        SetSortingLayer(itemMoveSortingLayer);
+
     }
 
     private void SetupPolygonCollider()
@@ -76,8 +92,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         var polygonCollider = gameObject.AddComponent<PolygonCollider2D>();
 
         // 获取sprite的轮廓路径
-
-        var sprite = GetComponent<SpriteRenderer>().sprite;
+        var sprite = spriteRenderer.sprite;
         if (sprite != null)
         {
             // 设置多边形碰撞器的路径为sprite的轮廓
@@ -128,6 +143,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 防止二次拖拽或已吸附物品的拖拽
         if (IsDragging || IsSnapped) return;
         IsDragging = true;
+
+        // 切换到拖拽层
+        SetSortingLayer(dragSortingLayer);
 
         _offset = transform.position - Camera.main.ScreenToWorldPoint(eventData.position);
     }
@@ -184,6 +202,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                     transform.position = closestPosition;
                     IsSnapped = true;
 
+                    // 切换到物品层
+                    SetSortingLayer(itemSortingLayer);
+
                     // 禁用碰撞器，防止拖拽
                     var collider = GetComponent<Collider2D>();
                     if (collider != null)
@@ -191,13 +212,11 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                         collider.enabled = false;
                     }
 
-
                     GetComponent<MovableItem>().Settle();
 
                     Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
 
                     // 检查关卡是否完成
-
                     if (positionManager.IsLevelComplete())
                     {
                         Debug.Log("关卡完成！");
@@ -213,18 +232,21 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 {
                     Debug.Log("位置已被占用，无法放置");
                     IsSnapped = false;
+                    SetSortingLayer(itemMoveSortingLayer);
                 }
             }
             else
             {
                 Debug.Log("不在物品的正确位置范围内或所有正确位置已被占用");
                 IsSnapped = false;
+                SetSortingLayer(itemMoveSortingLayer);
             }
         }
         else
         {
             Debug.LogError("ItemData或correctPositions为空！");
             IsSnapped = false;
+            SetSortingLayer(itemMoveSortingLayer);
         }
     }
 
@@ -296,6 +318,19 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     /// <summary>
+    /// 设置排序层
+    /// </summary>
+    /// <param name="sortingLayer">排序层名称</param>
+    private void SetSortingLayer(string sortingLayer)
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingLayerName = sortingLayer;
+            Debug.Log($"物品 {ItemData?.itemName} 切换到排序层: {sortingLayer}");
+        }
+    }
+
+    /// <summary>
     /// 重置吸附状态（用于外部调用）
     /// </summary>
     public void ResetSnapState()
@@ -303,12 +338,16 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         IsSnapped = false;
         IsDragging = false;
 
+        // 切换到移动层
+
+        SetSortingLayer(itemMoveSortingLayer);
+
         // 重新启用碰撞器，允许拖拽
+
         var collider = GetComponent<Collider2D>();
         if (collider != null)
         {
             collider.enabled = true;
         }
     }
-
 }

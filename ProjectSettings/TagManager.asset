@@ -47,6 +47,9 @@ TagManager:
   - name: Item
     uniqueID: 1310872185
     locked: 0
+  - name: ItemMove
+    uniqueID: 3501641119
+    locked: 0
   - name: Top
     uniqueID: 1100942691
     locked: 0
