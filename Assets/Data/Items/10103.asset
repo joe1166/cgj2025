@@ -24,5 +24,8 @@ MonoBehaviour:
   moveSpeed: 2
   settleTime: 10
   SnapRange: 0.5
-  prerequisiteItemId: 10101
+  prerequisiteItemId: -1
+  needShake: 0
   dialogue: nonono
+  leftLegPosition: {x: -0.5, y: -0.3}
+  rightLegPosition: {x: 0.5, y: -0.3}
