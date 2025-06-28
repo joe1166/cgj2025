@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BG
+    uniqueID: 2213714257
+    locked: 0
+  - name: Item
+    uniqueID: 1310872185
+    locked: 0
+  - name: Top
+    uniqueID: 1100942691
+    locked: 0
+  - name: Drag
+    uniqueID: 3839675585
+    locked: 0
+  - name: UI
+    uniqueID: 3263858321
+    locked: 0

@@ -17,7 +17,7 @@ public class MovableItem : MonoBehaviour
     private float topExtent;
     private float bottomExtent;
 
-    void Awake()
+    public void Init()
     {
         moveSpeed = GetComponent<DraggableItem>().ItemData.moveSpeed;
 
@@ -28,17 +28,14 @@ public class MovableItem : MonoBehaviour
         rightExtent = bounds.max.x - center.x;
         topExtent = center.y - bounds.min.y;
         bottomExtent = bounds.max.y - center.y;
-    }
 
-    void Start()
-    {
         PickNewDirection();
     }
 
     void Update()
     {
         bool IsDragging = GetComponent<DraggableItem>().IsDragging;
-        bool IsMoving = !(IsDragging || IsSettling()); 
+        bool IsMoving = !(IsDragging || IsSettling());
         if (IsMoving)
         {
             // 移动
@@ -55,9 +52,9 @@ public class MovableItem : MonoBehaviour
                 PickNewDirection();
             }
         }
-        if (IsSettling()) 
+        if (IsSettling())
         {
-            settleTimer = Math.Min(settleTimer - Time.deltaTime, 0);
+            settleTimer = Math.Max(settleTimer - Time.deltaTime, 0);
         }
 
     }

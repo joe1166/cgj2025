@@ -12,6 +12,7 @@ public class LevelController : MonoBehaviour
     public Button pauseButton;
     public Button resumeButton;
     public Button mainMenuButton;
+    public Button nextLevelButton;
 
     [Header("Level Settings")]
     public GameObject levelCompletePanel;
@@ -53,6 +54,9 @@ public class LevelController : MonoBehaviour
 
         if (mainMenuButton != null)
             mainMenuButton.onClick.AddListener(() => GameManager.Instance.ReturnToMainMenu());
+
+        if (nextLevelButton != null)
+            nextLevelButton.onClick.AddListener(() => GameManager.Instance.NextLevel());
     }
 
     private void OnLevelChanged(int newLevel)

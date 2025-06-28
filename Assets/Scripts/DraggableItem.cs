@@ -13,27 +13,45 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private Vector3 _offset;
 
-
-    private void Awake()
-    {
-        Init();
-    }
-
     public void Init()
     {
         var sr = GetComponent<SpriteRenderer>();
 
-        if (sr != null && ItemData != null && ItemData.itemSprite != null)
+        if (sr == null)
         {
-            sr.sprite = ItemData.itemSprite;
-
-            // 根据图片轮廓自动设置多边形碰撞器
-            SetupPolygonCollider();
+            Debug.LogError($"错误: GameObject {gameObject.name} 没有SpriteRenderer组件");
+        }
+        else if (ItemData == null)
+        {
+            Debug.LogError($"错误: GameObject {gameObject.name} 的ItemData为空");
+        }
+        else if (ItemData.itemSprite == null)
+        {
+            Debug.LogError($"错误: ItemData {ItemData.name} 的itemSprite为空");
         }
         else
         {
-            Debug.LogError("error: ItemData is null");
+            sr.sprite = ItemData.itemSprite;
+
+            // 应用ItemData中的旋转和缩放
+            if (ItemData.rotation != Quaternion.identity)
+            {
+                transform.rotation = ItemData.rotation;
+            }
+            if (ItemData.scale != Vector3.one)
+            {
+                transform.localScale = ItemData.scale;
+            }
+
+            transform.position = ItemData.correctPositions[0];
+
+            // 根据图片轮廓自动设置多边形碰撞器
+            SetupPolygonCollider();
+
+            GetComponent<MovableItem>().Init();
         }
+
+
     }
 
     private void SetupPolygonCollider()
@@ -81,15 +99,78 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         Debug.Log("OnEndDrag called!");
         IsDragging = false;
-        // 判断是否在吸附范围内
-        if (ItemData != null && Vector2.Distance(transform.position, ItemData.correctPosition) <= SnapRange)
+
+        // 获取位置管理器
+        PositionManager positionManager = FindObjectOfType<PositionManager>();
+        if (positionManager == null)
         {
-            transform.position = ItemData.correctPosition;
-            IsSnapped = true;
-            GetComponent<MovableItem>().Settle();
+            Debug.LogError("找不到PositionManager！");
+            return;
+        }
+
+        // 检查物品是否在自己的正确位置范围内
+        if (ItemData != null && ItemData.correctPositions != null && ItemData.correctPositions.Count > 0)
+        {
+            Vector2 closestPosition = Vector2.zero;
+            float closestDistance = float.MaxValue;
+            bool foundValidPosition = false;
+
+            // 遍历物品自己的正确位置
+            foreach (Vector2 correctPos in ItemData.correctPositions)
+            {
+                float distance = Vector2.Distance(transform.position, correctPos);
+                if (distance <= SnapRange && distance < closestDistance)
+                {
+                    // 检查该位置是否已被占用
+                    if (!positionManager.IsPositionOccupied(correctPos, SnapRange))
+                    {
+                        closestPosition = correctPos;
+                        closestDistance = distance;
+                        foundValidPosition = true;
+                    }
+                }
+            }
+
+            if (foundValidPosition)
+            {
+                // 占用该位置
+                if (positionManager.OccupyPosition(closestPosition, SnapRange))
+                {
+                    transform.position = closestPosition;
+                    IsSnapped = true;
+                    GetComponent<MovableItem>().Settle();
+
+
+                    Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
+
+                    // 检查关卡是否完成
+
+                    if (positionManager.IsLevelComplete())
+                    {
+                        Debug.Log("关卡完成！");
+                        // 通知关卡控制器
+                        LevelController levelController = FindObjectOfType<LevelController>();
+                        if (levelController != null)
+                        {
+                            levelController.CompleteLevel();
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("位置已被占用，无法放置");
+                    IsSnapped = false;
+                }
+            }
+            else
+            {
+                Debug.Log("不在物品的正确位置范围内或所有正确位置已被占用");
+                IsSnapped = false;
+            }
         }
         else
         {
+            Debug.LogError("ItemData或correctPositions为空！");
             IsSnapped = false;
         }
     }
