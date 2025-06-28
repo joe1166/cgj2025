@@ -34,9 +34,9 @@ public class MovableItem : MonoBehaviour
 
     void Update()
     {
-        bool IsDragging = GetComponent<DraggableItem>().IsDragging;
-        bool IsMoving = !(IsDragging || IsSettling());
-        if (IsMoving)
+        // bool IsDragging = GetComponent<DraggableItem>().IsDragging;
+        bool canMove = GetComponent<DraggableItem>().CanMove();
+        if (canMove)
         {
             // 移动
             UnityEngine.Vector2 newPos = moveDirection * moveSpeed * Time.deltaTime;
