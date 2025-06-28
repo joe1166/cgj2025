@@ -76,6 +76,29 @@ public class LegsManager : MonoBehaviour
         StartCoroutine(InitializeLegs());
     }
 
+    private void Update()
+    {
+        // 更新腿的位置，确保跟随物品移动
+        UpdateLegsPosition();
+    }
+
+    /// <summary>
+    /// 更新腿的位置
+    /// </summary>
+    private void UpdateLegsPosition()
+    {
+        if (leftLegInstance != null)
+        {
+            Vector3 leftLegWorldPosition = transform.position + (Vector3)leftLegPosition;
+            leftLegInstance.transform.position = leftLegWorldPosition;
+        }
+        if (rightLegInstance != null)
+        {
+            Vector3 rightLegWorldPosition = transform.position + (Vector3)rightLegPosition;
+            rightLegInstance.transform.position = rightLegWorldPosition;
+        }
+    }
+
     /// <summary>
     /// 初始化腿部的协程
     /// </summary>
@@ -114,7 +137,7 @@ public class LegsManager : MonoBehaviour
         if (leftLegPrefab != null)
         {
             Vector3 leftLegWorldPosition = transform.position + (Vector3)leftLegPosition;
-            leftLegInstance = Instantiate(leftLegPrefab, leftLegWorldPosition, Quaternion.identity, transform);
+            leftLegInstance = Instantiate(leftLegPrefab, leftLegWorldPosition, Quaternion.identity);
             leftLegAnimator = leftLegInstance.GetComponent<Animator>();
             leftLegRenderer = leftLegInstance.GetComponent<SpriteRenderer>();
             
@@ -135,7 +158,7 @@ public class LegsManager : MonoBehaviour
         if (rightLegPrefab != null)
         {
             Vector3 rightLegWorldPosition = transform.position + (Vector3)rightLegPosition;
-            rightLegInstance = Instantiate(rightLegPrefab, rightLegWorldPosition, Quaternion.identity, transform);
+            rightLegInstance = Instantiate(rightLegPrefab, rightLegWorldPosition, Quaternion.identity);
             rightLegAnimator = rightLegInstance.GetComponent<Animator>();
             rightLegRenderer = rightLegInstance.GetComponent<SpriteRenderer>();
 
