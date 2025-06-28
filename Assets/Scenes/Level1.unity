@@ -1413,12 +1413,28 @@ MonoBehaviour:
   correctPositions:
   - {x: 3.59, y: -2.42}
   - {x: 4.89, y: -2.42}
+  - {x: -2.2, y: 1.73}
+  - {x: 4.32, y: 0.41}
+  - {x: 4.32, y: -0.69}
+  - {x: 4.32, y: 1.69}
+  - {x: -3.61, y: -1.61}
+  - {x: 0.05, y: -1.02}
+  - {x: -2.89, y: 0.39}
+  - {x: 1.83, y: -0.4}
   itemPrefab: {fileID: 5711911682140555991, guid: 07b39695ae2eee2498ca0f266f03ac1b, type: 3}
   conditionalItemPrefab: {fileID: 5711911682140555991, guid: de03e6b3aa5ad0f4385b5b11a9629917, type: 3}
   shakableItemPrefab: {fileID: 5711911682140555991, guid: 55071d7e18633e348af549595ef53549, type: 3}
   levelItems:
   - {fileID: 11400000, guid: 6649966497793ef4895e4040dd082323, type: 2}
   - {fileID: 11400000, guid: 6649966497793ef4895e4040dd082323, type: 2}
+  - {fileID: 11400000, guid: 75ced96694a1f90488b5ceac9e5ffc7c, type: 2}
+  - {fileID: 11400000, guid: 75ced96694a1f90488b5ceac9e5ffc7c, type: 2}
+  - {fileID: 11400000, guid: 75ced96694a1f90488b5ceac9e5ffc7c, type: 2}
+  - {fileID: 11400000, guid: d5d70fd7974f75543baef7473f3d0e7b, type: 2}
+  - {fileID: 11400000, guid: 6a07b3521dcf5674b8e84a03b23408f0, type: 2}
+  - {fileID: 11400000, guid: 5245ffa6e3a08ea44a5a85c64daa39f0, type: 2}
+  - {fileID: 11400000, guid: 261e31f7b3be0e74eb5c1bdae43f4a9d, type: 2}
+  - {fileID: 11400000, guid: 5196f86fb620c3f43ad1bfdb70082ae1, type: 2}
 --- !u!4 &1167880691
 Transform:
   m_ObjectHideFlags: 0
