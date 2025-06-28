@@ -17,6 +17,7 @@ public class ItemData : ScriptableObject
 
     [Header("前置条件")]
     public int prerequisiteItemId = -1; // 前置物品ID，-1表示无前置条件
+    public bool needShake = false;
 
 
     [Header("台词设置")]

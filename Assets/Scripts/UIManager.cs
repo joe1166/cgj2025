@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("UI设置")]
     public GameObject textPrefab; // 文本预制体（需要有TextMeshPro组件）
-    public float textOffsetMultiplier = 1.2f; // 文本偏移倍数（相对于物品高度）
+    public float textOffset = 0.1f; // 文本偏移倍数（相对于物品高度）
 
     [Header("渲染设置")]
     public string textSortingLayer = "UI"; // 文本的Sorting Layer名称
@@ -134,7 +134,7 @@ public class UIManager : MonoBehaviour
             float spriteHeight = spriteRenderer.sprite.bounds.size.y * item.transform.localScale.y;
 
             // 计算偏移量
-            float offsetY = spriteHeight * textOffsetMultiplier;
+            float offsetY = spriteHeight + textOffset;
 
             return new Vector3(0, offsetY, 0);
         }

@@ -173,6 +173,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 通知腿部管理器结束拖拽
         legsManager.OnDragEnd();
 
+        if (!settleConditionHook())
+        {
+            Debug.LogWarning("还没晕");
+            return;
+        }
+
         // 获取位置管理器
         PositionManager positionManager = FindObjectOfType<PositionManager>();
         if (positionManager == null)

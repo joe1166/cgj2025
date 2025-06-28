@@ -14,6 +14,7 @@ public class PositionManager : MonoBehaviour
     [Header("物品设置")]
     public GameObject itemPrefab; // 物品预制体（需要有DraggableItem组件）
     public GameObject conditionalItemPrefab; // 条件物品预制体（需要有ConditionalDraggableItem组件）
+    public GameObject shakableItemPrefab;
     public List<ItemData> levelItems = new List<ItemData>(); // 当前关卡会用到的所有ItemData
 
     private List<Vector2> occupiedPositions = new List<Vector2>(); // 已被占用的位置
@@ -54,6 +55,10 @@ public class PositionManager : MonoBehaviour
             {
                 // 实例化条件物品预制体
                 itemInstance = Instantiate(conditionalItemPrefab, transform);
+            }
+            else if (itemData.needShake)
+            {
+                itemInstance = Instantiate(shakableItemPrefab, transform);
             }
             else
             {

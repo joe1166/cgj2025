@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6089385303679364880}
   - component: {fileID: 7266259601359149291}
   - component: {fileID: -6560832752601221276}
+  - component: {fileID: 2895840066350859963}
   m_Layer: 0
   m_Name: ShakableItem
   m_TagString: Untagged
@@ -107,7 +108,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5711911682140555991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcd043eb7e8502b4693a0bdafc1075ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 26fc173d3c9014943a6bce2c51a0bbbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ItemData: {fileID: 0}
@@ -117,3 +118,28 @@ MonoBehaviour:
   minDialogueInterval: 5
   maxDialogueInterval: 15
   dialogueDisplayTime: 3
+  dragSortingLayer: Drag
+  itemSortingLayer: Item
+  itemMoveSortingLayer: ItemMove
+--- !u!114 &2895840066350859963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711911682140555991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbbf290c293c63f4bb84d9af067215c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftLegPrefab: {fileID: 4274948410161620375, guid: 419e34f9943a9264b80b7b6f3543bf49, type: 3}
+  rightLegPrefab: {fileID: 5650250828221627404, guid: 23a1989df6203524ea06b2bac03337d8, type: 3}
+  leftLegPosition: {x: -0.5, y: -0.3}
+  rightLegPosition: {x: 0.5, y: -0.3}
+  movingAnimationParam: IsMoving
+  draggingAnimationParam: IsDragging
+  settledAnimationParam: IsSettled
+  dragSortingLayer: Drag
+  itemSortingLayer: Item
+  itemMoveSortingLayer: ItemMove
