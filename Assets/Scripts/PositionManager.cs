@@ -19,10 +19,16 @@ public class PositionManager : MonoBehaviour
 
     private List<Vector2> occupiedPositions = new List<Vector2>(); // 已被占用的位置
 
+    private void Start()
+    {
+        // 创建关卡中的所有物品
+        CreateLevelItems();
+    }
+
     /// <summary>
     /// 创建关卡中的所有物品
     /// </summary>
-    public void CreateLevelItems()
+    private void CreateLevelItems()
     {
         if (itemPrefab == null)
         {

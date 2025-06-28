@@ -128,7 +128,6 @@ public class GameManager : MonoBehaviour
             {
                 yield return null;
             }
-
         }
         else
         {
@@ -143,8 +142,6 @@ public class GameManager : MonoBehaviour
 
             // 等待一帧确保场景完全加载
             yield return null;
-            PositionManager positionManager = GameObject.Find("PositionManager").GetComponent<PositionManager>();
-            positionManager.CreateLevelItems();
 
             // 卸载旧场景
             AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(currentSceneName);
