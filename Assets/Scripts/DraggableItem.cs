@@ -26,6 +26,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private float nextDialogueTime = 0f; // 下次说台词的时间
     private bool isShowingDialogue = false; // 是否正在显示台词
     private SpriteRenderer spriteRenderer; // 缓存SpriteRenderer组件
+    private LegsManager legsManager; // 腿部管理器
 
     public void Init()
     {
@@ -65,6 +66,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
 
         transform.position = ItemData.correctPositions[0];
+        SnapRange = ItemData.SnapRange;
 
         // 根据图片轮廓自动设置多边形碰撞器
         SetupPolygonCollider();
@@ -84,6 +86,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 设置初始排序层为移动层
         SetSortingLayer(itemMoveSortingLayer);
 
+        // 获取腿部管理器
+        legsManager = GetComponent<LegsManager>();
     }
 
     private void SetupPolygonCollider()
@@ -147,6 +151,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 切换到拖拽层
         SetSortingLayer(dragSortingLayer);
 
+        // 通知腿部管理器开始拖拽
+        legsManager.OnDragStart();
+
         _offset = transform.position - Camera.main.ScreenToWorldPoint(eventData.position);
     }
 
@@ -162,6 +169,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         Debug.Log("OnEndDrag called!");
         IsDragging = false;
+
+        // 通知腿部管理器结束拖拽
+        legsManager.OnDragEnd();
 
         // 获取位置管理器
         PositionManager positionManager = FindObjectOfType<PositionManager>();
@@ -213,6 +223,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                     }
 
                     GetComponent<MovableItem>().Settle();
+
+                    // 通知腿部管理器物品已放置
+                    legsManager.OnItemSettled();
 
                     Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
 
@@ -341,6 +354,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 切换到移动层
 
         SetSortingLayer(itemMoveSortingLayer);
+
+        // 确保腿部动画正常运行
+        legsManager.OnItemReset();
 
         // 重新启用碰撞器，允许拖拽
 

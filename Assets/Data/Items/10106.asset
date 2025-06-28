@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbfc6860e8482544f8db4674a58e137c, type: 3}
-  m_Name: 10103
+  m_Name: 10106
   m_EditorClassIdentifier: 
-  itemId: 10103
+  itemId: 10106
   itemName: 
   correctPositions:
-  - {x: 4.32, y: 0.41}
-  - {x: 4.32, y: -0.69}
-  - {x: 4.32, y: 1.69}
+  - {x: -2.89, y: 0.39}
   rotation: {x: 0, y: 0, z: 0, w: 1}
-  scale: {x: 1, y: 1, z: 1}
-  itemSprite: {fileID: 21300000, guid: b3b11bbaaf8968045b9b5e1e399f8c78, type: 3}
+  scale: {x: 1.3, y: 1.3, z: 1}
+  itemSprite: {fileID: 21300000, guid: 2b2885a21f6edcb43b301b1fe1b51343, type: 3}
   moveSpeed: 2
   settleTime: 10
   SnapRange: 0.5
-  prerequisiteItemId: 10101
-  dialogue: nonono
+  prerequisiteItemId: -1
+  dialogue: 

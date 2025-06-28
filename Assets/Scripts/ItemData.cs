@@ -12,6 +12,7 @@ public class ItemData : ScriptableObject
     public Sprite itemSprite;
     public float moveSpeed;
     public float settleTime;
+    public float SnapRange = 0.5f;
 
 
     [Header("前置条件")]
@@ -20,4 +21,8 @@ public class ItemData : ScriptableObject
 
     [Header("台词设置")]
     public string dialogue = ""; // 物品的台词
+
+    [Header("腿设置")]
+    public Vector2 leftLegPosition = Vector2.zero; // 左腿位置
+    public Vector2 rightLegPosition = Vector2.zero; // 右腿位置
 }

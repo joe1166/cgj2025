@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8378663617198855374}
   - component: {fileID: 6089385303679364880}
   - component: {fileID: 7266259601359149291}
+  - component: {fileID: 1726719167829891959}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -120,3 +121,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9751c8485e38b4299e6f46a1256db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1726719167829891959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711911682140555991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbbf290c293c63f4bb84d9af067215c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftLegPrefab: {fileID: 4274948410161620375, guid: 419e34f9943a9264b80b7b6f3543bf49, type: 3}
+  rightLegPrefab: {fileID: 5650250828221627404, guid: 23a1989df6203524ea06b2bac03337d8, type: 3}
+  leftLegPosition: {x: -0.5, y: -0.3}
+  rightLegPosition: {x: 0.5, y: -0.3}
+  movingAnimationParam: IsMoving
+  draggingAnimationParam: IsDragging
+  settledAnimationParam: IsSettled

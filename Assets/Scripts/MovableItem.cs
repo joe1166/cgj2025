@@ -80,6 +80,13 @@ public class MovableItem : MonoBehaviour
             // 重置IsSnapped状态
             draggableItem.ResetSnapState();
 
+            // 通知腿部管理器物品重置
+            LegsManager legsManager = GetComponent<LegsManager>();
+            if (legsManager != null)
+            {
+                legsManager.OnItemReset();
+            }
+
             Debug.Log($"物品 {draggableItem.ItemData?.itemName} 已释放位置，重新开始移动");
         }
     }
