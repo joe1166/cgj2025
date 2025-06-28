@@ -204,6 +204,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 }
             }
 
+
             if (foundValidPosition)
             {
                 // 占用该位置
@@ -211,66 +212,59 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 {
                     transform.position = closestPosition;
                     IsSnapped = true;
-                    if (foundValidPosition)
+
+                    // 切换到物品层
+                    SetSortingLayer(itemSortingLayer);
+
+                    // 禁用碰撞器，防止拖拽
+                    var collider = GetComponent<Collider2D>();
+                    if (collider != null)
                     {
-                        // 占用该位置
-                        if (positionManager.OccupyPosition(closestPosition, SnapRange))
-                        {
-                            transform.position = closestPosition;
-                            IsSnapped = true;
-
-                            // 切换到物品层
-                            SetSortingLayer(itemSortingLayer);
-
-                            // 禁用碰撞器，防止拖拽
-                            var collider = GetComponent<Collider2D>();
-                            if (collider != null)
-                            {
-                                collider.enabled = false;
-                            }
-
-                            GetComponent<MovableItem>().Settle();
-
-                            // 通知腿部管理器物品已放置
-                            legsManager.OnItemSettled();
-
-                            Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
-
-                            // 检查关卡是否完成
-                            if (positionManager.IsLevelComplete())
-                            {
-                                Debug.Log("关卡完成！");
-                                // 通知关卡控制器
-                                LevelController levelController = FindObjectOfType<LevelController>();
-                                if (levelController != null)
-                                {
-                                    levelController.CompleteLevel();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Debug.Log("位置已被占用，无法放置");
-                            IsSnapped = false;
-                            SetSortingLayer(itemMoveSortingLayer);
-                        }
+                        collider.enabled = false;
                     }
-                    else
+
+                    GetComponent<MovableItem>().Settle();
+
+                    // 通知腿部管理器物品已放置
+                    legsManager.OnItemSettled();
+
+                    Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
+
+                    // 检查关卡是否完成
+                    if (positionManager.IsLevelComplete())
                     {
-                        Debug.Log("不在物品的正确位置范围内或所有正确位置已被占用");
-                        IsSnapped = false;
-                        SetSortingLayer(itemMoveSortingLayer);
+                        Debug.Log("关卡完成！");
+                        // 通知关卡控制器
+                        LevelController levelController = FindObjectOfType<LevelController>();
+                        if (levelController != null)
+                        {
+                            levelController.CompleteLevel();
+                        }
                     }
                 }
                 else
                 {
-                    Debug.LogError("ItemData或correctPositions为空！");
+                    Debug.Log("位置已被占用，无法放置");
                     IsSnapped = false;
                     SetSortingLayer(itemMoveSortingLayer);
                 }
             }
+            else
+            {
+                Debug.Log("不在物品的正确位置范围内或所有正确位置已被占用");
+                IsSnapped = false;
+                SetSortingLayer(itemMoveSortingLayer);
+            }
+        }
+        else
+        {
+            Debug.LogError("ItemData或correctPositions为空！");
+            IsSnapped = false;
+            SetSortingLayer(itemMoveSortingLayer);
         }
     }
+
+
 
     public virtual bool settleConditionHook()
     {
