@@ -10,7 +10,6 @@ public class ShakableDraggableItem : DraggableItem
 {
     // private bool isShaking = false;
     private bool isPassedOut = false;
-    private float shakeTimer = 0;
     private float passedOutTimer = 0f;
 
     private Queue<float> recentShakeTimes = new Queue<float>();
@@ -41,7 +40,7 @@ public class ShakableDraggableItem : DraggableItem
     public override void Init()
     {
         base.Init();
-        
+
         lastMousePosition = Input.mousePosition;
     }
 
@@ -65,7 +64,6 @@ public class ShakableDraggableItem : DraggableItem
         {
             // 非拖拽时清除计数
             recentShakeTimes.Clear();
-            shakeTimer = 0f;
         }
     }
 
@@ -113,11 +111,10 @@ public class ShakableDraggableItem : DraggableItem
     {
         isPassedOut = true;
         passedOutTimer = 5f;
-        shakeTimer = 0f;
         recentShakeTimes.Clear();
         Debug.Log("晕倒！");
     }
-    
+
     public void EndPassedOut()
     {
         if (isPassedOut)

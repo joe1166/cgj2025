@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class MovableItem : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MovableItem : MonoBehaviour
     private float minChangeDirTime = 1f;
     private float maxChangeDirTime = 3f;
 
+    private DraggableItem draggableItem;
     private float leftExtent;
     private float rightExtent;
     private float topExtent;
@@ -19,15 +21,10 @@ public class MovableItem : MonoBehaviour
 
     public void Init()
     {
-        moveSpeed = GetComponent<DraggableItem>().ItemData.moveSpeed;
+        draggableItem = GetComponent<DraggableItem>();
+        moveSpeed = draggableItem.ItemData.moveSpeed;
 
-        // 计算碰撞检测变量
-        var bounds = GetComponent<Collider2D>().bounds;
-        Vector2 center = bounds.center;
-        leftExtent = center.x - bounds.min.x;
-        rightExtent = bounds.max.x - center.x;
-        topExtent = center.y - bounds.min.y;
-        bottomExtent = bounds.max.y - center.y;
+
 
         PickNewDirection();
     }
@@ -105,26 +102,32 @@ public class MovableItem : MonoBehaviour
 
     void CheckScreenEdgeBounce()
     {
-        // 先获取边界位置（世界坐标）
-        Vector3 screenMin = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
-        Vector3 screenMax = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
-
-        Vector3 pos = transform.position;
         bool bounced = false;
-
-        // 水平方向碰撞
-        if (pos.x - leftExtent <= screenMin.x || pos.x + rightExtent >= screenMax.x)
+        List<bool> bouncedCheck = draggableItem.CheckScreenEdgeBounce();
+        if (bouncedCheck[0] || bouncedCheck[1])
         {
             moveDirection.x = -moveDirection.x;
             bounced = true;
         }
-
-        // 垂直方向碰撞
-        if (pos.y - bottomExtent <= screenMin.y || pos.y + topExtent >= screenMax.y)
+        if (bouncedCheck[2] || bouncedCheck[3])
         {
             moveDirection.y = -moveDirection.y;
             bounced = true;
         }
+
+        // // 水平方向碰撞
+        // if (pos.x - leftExtent <= screenMin.x || pos.x + rightExtent >= screenMax.x)
+        // {
+        //     moveDirection.x = -moveDirection.x;
+        //     bounced = true;
+        // }
+
+        // // 垂直方向碰撞
+        // if (pos.y - bottomExtent <= screenMin.y || pos.y + topExtent >= screenMax.y)
+        // {
+        //     moveDirection.y = -moveDirection.y;
+        //     bounced = true;
+        // }
 
         if (bounced)
         {

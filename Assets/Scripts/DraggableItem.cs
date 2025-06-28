@@ -27,6 +27,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private bool isShowingDialogue = false; // 是否正在显示台词
     private SpriteRenderer spriteRenderer; // 缓存SpriteRenderer组件
     private LegsManager legsManager; // 腿部管理器
+    private MovableItem movableItem;
+
+    public float LeftExtent { get; private set; }
+    public float RightExtent { get; private set; }
+    public float TopExtent { get; private set; }
+    public float BottomExtent { get; private set; }
 
     public virtual void Init()
     {
@@ -74,7 +80,16 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // 创建文本显示
         CreateItemText();
 
-        GetComponent<MovableItem>().Init();
+        movableItem = GetComponent<MovableItem>();
+        movableItem.Init();
+
+        // 计算碰撞检测变量
+        var bounds = GetComponent<Collider2D>().bounds;
+        Vector2 center = bounds.center;
+        LeftExtent = center.x - bounds.min.x;
+        RightExtent = bounds.max.x - center.x;
+        TopExtent = center.y - bounds.min.y;
+        BottomExtent = bounds.max.y - center.y;
 
         // 设置初始台词时间
         if (!string.IsNullOrEmpty(ItemData.dialogue))
@@ -141,6 +156,36 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
+    public List<bool> CheckScreenEdgeBounce()
+    {
+        // 先获取边界位置（世界坐标）
+        Vector3 screenMin = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
+        Vector3 screenMax = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
+
+        Vector3 pos = transform.position;
+
+
+        List<bool> bounced = new List<bool> { false, false, false, false };
+        if (pos.x - LeftExtent <= screenMin.x)
+        {
+            bounced[0] = true;
+        }
+        if (pos.x + RightExtent >= screenMax.x)
+        {
+            bounced[1] = true;
+        }
+        if (pos.y - BottomExtent <= screenMin.y)
+        {
+            bounced[2] = true;
+        }
+        if (pos.y + TopExtent >= screenMax.y)
+        {
+            bounced[3] = true;
+        }
+
+        return bounced;
+    }
+
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
         // Debug.Log("OnBeginDrag called!");
@@ -163,6 +208,31 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Vector3 cursorPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         cursorPoint.z = 1;
         transform.position = cursorPoint + _offset;
+
+        Vector3 newPosition = cursorPoint + _offset;
+        Vector3 screenMin = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
+        Vector3 screenMax = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
+
+        // 检测是否撞墙，如果撞墙，保证x或y clip到屏幕边界
+        List<bool> bounced = CheckScreenEdgeBounce();
+        if (bounced[0])
+        {
+            newPosition.x = Mathf.Clamp(newPosition.x, screenMin.x + LeftExtent, screenMax.x - RightExtent);
+        }
+        if (bounced[1])
+        {
+            newPosition.x = Mathf.Clamp(newPosition.x, screenMin.x + LeftExtent, screenMax.x - RightExtent);
+        }
+        if (bounced[2])
+        {
+            newPosition.y = Mathf.Clamp(newPosition.y, screenMin.y + BottomExtent, screenMax.y - TopExtent);
+        }
+        if (bounced[3])
+        {
+            newPosition.y = Mathf.Clamp(newPosition.y, screenMin.y + BottomExtent, screenMax.y - TopExtent);
+        }
+
+        transform.position = newPosition;
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)
