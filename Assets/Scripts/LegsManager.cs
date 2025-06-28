@@ -54,10 +54,16 @@ public class LegsManager : MonoBehaviour
     // 状态机事件
     public System.Action<LegsState> OnStateChanged;
 
+
+    public int legLayerBase;
+    public int legLayerOffset = 1;
+
     private void Start()
     {
         // 获取相关组件
         draggableItem = GetComponent<DraggableItem>();
+        legLayerBase = GetComponent<SpriteRenderer>().sortingOrder;
+
         movableItem = GetComponent<MovableItem>();
 
         if (draggableItem == null)
@@ -111,6 +117,13 @@ public class LegsManager : MonoBehaviour
             leftLegInstance = Instantiate(leftLegPrefab, leftLegWorldPosition, Quaternion.identity, transform);
             leftLegAnimator = leftLegInstance.GetComponent<Animator>();
             leftLegRenderer = leftLegInstance.GetComponent<SpriteRenderer>();
+            
+            // 改变渲染图层zindex
+            Debug.Log("legLayerBase");
+            Debug.Log(legLayerBase);
+            leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder = legLayerBase + legLayerOffset;
+            Debug.Log(leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder);
+
 
             if (leftLegAnimator == null)
             {
@@ -125,6 +138,9 @@ public class LegsManager : MonoBehaviour
             rightLegInstance = Instantiate(rightLegPrefab, rightLegWorldPosition, Quaternion.identity, transform);
             rightLegAnimator = rightLegInstance.GetComponent<Animator>();
             rightLegRenderer = rightLegInstance.GetComponent<SpriteRenderer>();
+
+            // 改变渲染图层zindex
+            rightLegInstance.GetComponent<SpriteRenderer>().sortingOrder = legLayerBase + legLayerOffset;
 
             if (rightLegAnimator == null)
             {
@@ -376,12 +392,12 @@ public class LegsManager : MonoBehaviour
         if (leftLegRenderer != null)
         {
             leftLegRenderer.sortingLayerName = sortingLayer;
-            leftLegRenderer.sortingOrder = 100;
+            // leftLegRenderer.sortingOrder = 100;
         }
         if (rightLegRenderer != null)
         {
             rightLegRenderer.sortingLayerName = sortingLayer;
-            rightLegRenderer.sortingOrder = 100;
+            // rightLegRenderer.sortingOrder = 100;
         }
 
         Debug.Log($"LegsManager: 设置腿部排序层为 {sortingLayer}");
