@@ -1,20 +1,35 @@
 using UnityEngine;
+using System;
 
 public class MovableItem : MonoBehaviour
 {
     // public float speedScale = 1;
     private float moveSpeed = 2f;
-    public float minChangeDirTime = 1f;
-    public float maxChangeDirTime = 3f;
-    private float settleTimer = 0;
 
-
+    private float minChangeDirTime = 1f;
+    private float maxChangeDirTime = 3f;
     private Vector2 moveDirection;
+
+
+    private float settleTimer = 0;
     private float changeDirTimer;
+
+    private float leftExtent;
+    private float rightExtent;
+    private float topExtent;
+    private float bottomExtent;
 
     void Awake()
     {
         moveSpeed = GetComponent<DraggableItem>().ItemData.moveSpeed;
+
+        // 计算中心点距离左右碰撞点
+        var bounds = GetComponent<Collider2D>().bounds;
+        Vector2 center = bounds.center;
+        leftExtent = center.x - bounds.min.x;
+        rightExtent = bounds.max.x - center.x;
+        topExtent = center.y - bounds.min.y;
+        bottomExtent = bounds.max.y - center.y;
 
     }
 
@@ -26,8 +41,8 @@ public class MovableItem : MonoBehaviour
     void Update()
     {
         bool IsDragging = GetComponent<DraggableItem>().IsDragging;
-        bool isMoving = IsDragging && (settleTimer == 0);
-        if (true)
+        bool IsMoving = !(IsDragging || IsSettling()); 
+        if (IsMoving)
         {
             UnityEngine.Vector2 newPos = moveDirection * moveSpeed * Time.deltaTime;
             transform.Translate(newPos);
@@ -37,33 +52,46 @@ public class MovableItem : MonoBehaviour
             changeDirTimer -= Time.deltaTime;
             if (changeDirTimer <= 0)
             {
-                // PickNewDirection();
+                PickNewDirection();
             }
+        }
+        if (IsSettling()) 
+        {
+            settleTimer = Math.Min(settleTimer - Time.deltaTime, 0);
         }
 
     }
 
+    bool IsSettling()
+    {
+        return (settleTimer > 0);
+    }
+
     void PickNewDirection()
     {
-        float angle = Random.Range(0f, 360f);
+        float angle = UnityEngine.Random.Range(0f, 360f);
         moveDirection = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
-        changeDirTimer = Random.Range(minChangeDirTime, maxChangeDirTime);
+        changeDirTimer = UnityEngine.Random.Range(minChangeDirTime, maxChangeDirTime);
     }
 
     void CheckScreenEdgeBounce()
     {
-        Vector3 viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        // 先获取边界位置（世界坐标）
+        Vector3 screenMin = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
+        Vector3 screenMax = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
+
+        Vector3 pos = transform.position;
         bool bounced = false;
 
-        // 左右碰撞
-        if (viewPos.x <= 0f || viewPos.x >= 1f)
+        // 水平方向碰撞
+        if (pos.x - leftExtent <= screenMin.x || pos.x + rightExtent >= screenMax.x)
         {
             moveDirection.x = -moveDirection.x;
             bounced = true;
         }
 
-        // 上下碰撞
-        if (viewPos.y <= 0f || viewPos.y >= 1f)
+        // 垂直方向碰撞
+        if (pos.y - bottomExtent <= screenMin.y || pos.y + topExtent >= screenMax.y)
         {
             moveDirection.y = -moveDirection.y;
             bounced = true;
@@ -72,7 +100,7 @@ public class MovableItem : MonoBehaviour
         if (bounced)
         {
             moveDirection = moveDirection.normalized;
-            changeDirTimer = Random.Range(minChangeDirTime, maxChangeDirTime);
+            changeDirTimer = UnityEngine.Random.Range(minChangeDirTime, maxChangeDirTime);
         }
     }
 
@@ -80,4 +108,5 @@ public class MovableItem : MonoBehaviour
     {
         settleTimer = GetComponent<DraggableItem>().ItemData.settleTime;
     }
+
 }
