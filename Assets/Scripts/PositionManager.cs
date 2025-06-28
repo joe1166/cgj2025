@@ -13,6 +13,7 @@ public class PositionManager : MonoBehaviour
 
     [Header("物品设置")]
     public GameObject itemPrefab; // 物品预制体（需要有DraggableItem组件）
+    public GameObject conditionalItemPrefab; // 条件物品预制体（需要有ConditionalDraggableItem组件）
     public List<ItemData> levelItems = new List<ItemData>(); // 当前关卡会用到的所有ItemData
 
     private List<Vector2> occupiedPositions = new List<Vector2>(); // 已被占用的位置
@@ -48,8 +49,17 @@ public class PositionManager : MonoBehaviour
                 continue;
             }
 
-            // 实例化物品预制体
-            GameObject itemInstance = Instantiate(itemPrefab, transform);
+            GameObject itemInstance;
+            if (itemData.prerequisiteItemId != -1)
+            {
+                // 实例化条件物品预制体
+                itemInstance = Instantiate(conditionalItemPrefab, transform);
+            }
+            else
+            {
+                // 实例化物品预制体
+                itemInstance = Instantiate(itemPrefab, transform);
+            }
 
             // 获取DraggableItem组件
             DraggableItem draggableItem = itemInstance.GetComponent<DraggableItem>();
@@ -110,6 +120,27 @@ public class PositionManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// 释放指定位置（不再被占用）
+    /// </summary>
+    /// <param name="position">要释放的位置</param>
+    /// <returns>是否成功释放位置</returns>
+    public bool ReleasePosition(Vector2 position)
+    {
+        // 检查该位置是否被占用
+        for (int i = 0; i < occupiedPositions.Count; i++)
+        {
+            if (Vector2.Distance(position, occupiedPositions[i]) < 0.01f) // 使用很小的距离阈值
+            {
+                // 释放位置
+                occupiedPositions.RemoveAt(i);
+                Debug.Log($"位置 {position} 已释放，当前已放置物品数量: {occupiedPositions.Count}");
+                return true;
+            }
+        }
+        return false; // 位置本来就没有被占用
     }
 
     /// <summary>

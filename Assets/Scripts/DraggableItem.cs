@@ -11,7 +11,15 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool IsSnapped = false;  // 正确吸附属性
     public bool IsDragging = false;
 
+    [Header("台词设置")]
+    public float minDialogueInterval = 5f; // 最小台词间隔时间
+    public float maxDialogueInterval = 15f; // 最大台词间隔时间
+    public float dialogueDisplayTime = 3f; // 台词显示时间
+
     private Vector3 _offset;
+    private float dialogueTimer = 0f; // 台词计时器
+    private float nextDialogueTime = 0f; // 下次说台词的时间
+    private bool isShowingDialogue = false; // 是否正在显示台词
 
     public void Init()
     {
@@ -48,10 +56,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             // 根据图片轮廓自动设置多边形碰撞器
             SetupPolygonCollider();
 
+            // 创建文本显示
+            CreateItemText();
+
             GetComponent<MovableItem>().Init();
+
+            // 设置初始台词时间
+            if (!string.IsNullOrEmpty(ItemData.dialogue))
+            {
+                float randomInterval = Random.Range(minDialogueInterval, maxDialogueInterval);
+                nextDialogueTime = Time.time + randomInterval;
+            }
         }
-
-
     }
 
     private void SetupPolygonCollider()
@@ -77,17 +93,46 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    /// <summary>
+    /// 为物品创建文本显示
+    /// </summary>
+    private void CreateItemText()
+    {
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.CreateItemText(this, "");
+        }
+        else
+        {
+            Debug.LogWarning("场景中没有找到UIManager，无法创建文本显示");
+        }
+    }
+
+    /// <summary>
+    /// 更新物品的文本显示
+    /// </summary>
+    /// <param name="newText">新文本</param>
+    public void UpdateText(string newText)
+    {
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.UpdateItemText(this, newText);
+        }
+    }
+
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag called!");
-        // 防止二次拖拽
+        // 防止二次拖拽或已吸附物品的拖拽
         if (IsDragging || IsSnapped) return;
         IsDragging = true;
 
         _offset = transform.position - Camera.main.ScreenToWorldPoint(eventData.position);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         Debug.Log("OnDrag called!");
         Vector3 cursorPoint = Camera.main.ScreenToWorldPoint(eventData.position);
@@ -95,7 +140,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.position = cursorPoint + _offset;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag called!");
         IsDragging = false;
@@ -138,8 +183,16 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 {
                     transform.position = closestPosition;
                     IsSnapped = true;
-                    GetComponent<MovableItem>().Settle();
 
+                    // 禁用碰撞器，防止拖拽
+                    var collider = GetComponent<Collider2D>();
+                    if (collider != null)
+                    {
+                        collider.enabled = false;
+                    }
+
+
+                    GetComponent<MovableItem>().Settle();
 
                     Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
 
@@ -174,4 +227,88 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             IsSnapped = false;
         }
     }
+
+    private void Update()
+    {
+        // 处理台词显示逻辑
+        HandleDialogue();
+    }
+
+    /// <summary>
+    /// 处理台词显示逻辑
+    /// </summary>
+    private void HandleDialogue()
+    {
+        // 如果物品没有台词，直接返回
+        if (string.IsNullOrEmpty(ItemData?.dialogue))
+            return;
+
+        // 如果正在显示台词
+        if (isShowingDialogue)
+        {
+            dialogueTimer += Time.deltaTime;
+            if (dialogueTimer >= dialogueDisplayTime)
+            {
+                // 台词显示时间结束，清空文本
+                ClearDialogue();
+            }
+        }
+        else
+        {
+            // 检查是否到了说台词的时间
+            if (Time.time >= nextDialogueTime)
+            {
+                // 随机说台词
+                ShowRandomDialogue();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示随机台词
+    /// </summary>
+    protected void ShowRandomDialogue()
+    {
+        if (ItemData != null && !string.IsNullOrEmpty(ItemData.dialogue))
+        {
+            // 显示台词
+            UpdateText(ItemData.dialogue);
+            isShowingDialogue = true;
+            dialogueTimer = 0f;
+
+            // 设置下次说台词的时间
+            float randomInterval = Random.Range(minDialogueInterval, maxDialogueInterval);
+            nextDialogueTime = Time.time + randomInterval;
+
+            Debug.Log($"物品 {ItemData.itemName} 说: {ItemData.dialogue}");
+        }
+    }
+
+    /// <summary>
+    /// 清空台词显示
+    /// </summary>
+    protected void ClearDialogue()
+    {
+        UpdateText("");
+
+        isShowingDialogue = false;
+        dialogueTimer = 0f;
+    }
+
+    /// <summary>
+    /// 重置吸附状态（用于外部调用）
+    /// </summary>
+    public void ResetSnapState()
+    {
+        IsSnapped = false;
+        IsDragging = false;
+
+        // 重新启用碰撞器，允许拖拽
+        var collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = true;
+        }
+    }
+
 }

@@ -12,4 +12,12 @@ public class ItemData : ScriptableObject
     public Sprite itemSprite;
     public float moveSpeed;
     public float settleTime;
+
+
+    [Header("前置条件")]
+    public int prerequisiteItemId = -1; // 前置物品ID，-1表示无前置条件
+
+
+    [Header("台词设置")]
+    public string dialogue = ""; // 物品的台词
 }

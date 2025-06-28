@@ -55,8 +55,33 @@ public class MovableItem : MonoBehaviour
         if (IsSettling())
         {
             settleTimer = Math.Max(settleTimer - Time.deltaTime, 0);
-        }
 
+            // 当settle time归零时，释放位置并重置状态
+            if (settleTimer <= 0)
+            {
+                ReleasePosition();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 释放位置并重置物品状态
+    /// </summary>
+    private void ReleasePosition()
+    {
+        DraggableItem draggableItem = GetComponent<DraggableItem>();
+        PositionManager positionManager = FindObjectOfType<PositionManager>();
+
+        if (positionManager != null && draggableItem != null)
+        {
+            // 释放位置
+            positionManager.ReleasePosition(transform.position);
+
+            // 重置IsSnapped状态
+            draggableItem.ResetSnapState();
+
+            Debug.Log($"物品 {draggableItem.ItemData?.itemName} 已释放位置，重新开始移动");
+        }
     }
 
     bool IsSettling()

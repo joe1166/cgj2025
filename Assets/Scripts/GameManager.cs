@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         {
             CurrentLevel = levelIndex;
             OnLevelChanged?.Invoke(CurrentLevel);
+            SetGameState(GameState.Playing);
             StartCoroutine(LoadLevelCoroutine(levelIndex));
         }
         else
@@ -104,20 +105,49 @@ public class GameManager : MonoBehaviour
         // 记录开始时间
         float startTime = Time.unscaledTime;
 
-        // 卸载当前场景
+        // 检查是否是重新加载当前场景
         string currentSceneName = SceneManager.GetActiveScene().name;
+        bool isReloadingCurrentScene = (currentSceneName == sceneName);
 
-        // 加载新场景
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-
-        // 等待场景加载完成
-        while (!asyncLoad.isDone)
+        if (isReloadingCurrentScene)
         {
-            yield return null;
-        }
+            // 重新加载当前场景
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
 
-        // 等待一帧确保场景完全加载
-        yield return null;
+            // 等待场景加载完成
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            // 先加载新场景（Additive模式）
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+            // 等待场景加载完成
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            // 等待一帧确保场景完全加载
+            yield return null;
+
+            // 卸载旧场景
+            AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(currentSceneName);
+
+            // 等待场景卸载完成
+            while (!asyncUnload.isDone)
+            {
+                yield return null;
+            }
+
+            // 强制垃圾回收，清理场景资源
+            System.GC.Collect();
+            yield return null;
+
+        }
 
         // 确保至少显示最小加载时间
         float elapsedTime = Time.unscaledTime - startTime;
@@ -127,6 +157,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 隐藏加载界面（亮屏）
+        Time.timeScale = 1f;
         yield return StartCoroutine(FadeToClear());
     }
 
@@ -218,6 +249,7 @@ public class GameManager : MonoBehaviour
     public void LevelComplete()
     {
         SetGameState(GameState.LevelComplete);
+        Time.timeScale = 0f;
         // 可以在这里添加关卡完成的效果、音效等
     }
 

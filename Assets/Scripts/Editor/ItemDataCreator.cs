@@ -43,6 +43,12 @@ public class ItemDataCreator : EditorWindow
                 Debug.LogWarning("Selected object doesn't have a SpriteRenderer with a sprite!");
             }
 
+            // 设置默认的itemId（可以根据需要修改）
+            data.itemId = 10001; // 默认ID，可以在Inspector中修改
+
+            // 设置默认的前置条件（无前置条件）
+            data.prerequisiteItemId = -1;
+
             string path = EditorUtility.SaveFilePanelInProject(
                 "Save Item Data",
                 "NewItemData",
