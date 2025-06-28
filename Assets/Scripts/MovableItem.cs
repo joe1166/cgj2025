@@ -115,20 +115,6 @@ public class MovableItem : MonoBehaviour
             bounced = true;
         }
 
-        // // 水平方向碰撞
-        // if (pos.x - leftExtent <= screenMin.x || pos.x + rightExtent >= screenMax.x)
-        // {
-        //     moveDirection.x = -moveDirection.x;
-        //     bounced = true;
-        // }
-
-        // // 垂直方向碰撞
-        // if (pos.y - bottomExtent <= screenMin.y || pos.y + topExtent >= screenMax.y)
-        // {
-        //     moveDirection.y = -moveDirection.y;
-        //     bounced = true;
-        // }
-
         if (bounced)
         {
             moveDirection = moveDirection.normalized;
