@@ -3,16 +3,14 @@ using System;
 
 public class MovableItem : MonoBehaviour
 {
-    // public float speedScale = 1;
+
     private float moveSpeed = 2f;
-
-    private float minChangeDirTime = 1f;
-    private float maxChangeDirTime = 3f;
     private Vector2 moveDirection;
-
 
     private float settleTimer = 0;
     private float changeDirTimer;
+    private float minChangeDirTime = 1f;
+    private float maxChangeDirTime = 3f;
 
     private float leftExtent;
     private float rightExtent;
@@ -23,14 +21,13 @@ public class MovableItem : MonoBehaviour
     {
         moveSpeed = GetComponent<DraggableItem>().ItemData.moveSpeed;
 
-        // 计算中心点距离左右碰撞点
+        // 计算碰撞检测变量
         var bounds = GetComponent<Collider2D>().bounds;
         Vector2 center = bounds.center;
         leftExtent = center.x - bounds.min.x;
         rightExtent = bounds.max.x - center.x;
         topExtent = center.y - bounds.min.y;
         bottomExtent = bounds.max.y - center.y;
-
     }
 
     void Start()
@@ -44,11 +41,14 @@ public class MovableItem : MonoBehaviour
         bool IsMoving = !(IsDragging || IsSettling()); 
         if (IsMoving)
         {
+            // 移动
             UnityEngine.Vector2 newPos = moveDirection * moveSpeed * Time.deltaTime;
             transform.Translate(newPos);
 
+            // 碰撞检测
             CheckScreenEdgeBounce();
 
+            // 改变移动方向
             changeDirTimer -= Time.deltaTime;
             if (changeDirTimer <= 0)
             {
