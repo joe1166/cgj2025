@@ -249,6 +249,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (!settleConditionHook())
         {
             Debug.LogWarning("还没晕");
+            ShowRandomDialogue();
             return;
         }
 
