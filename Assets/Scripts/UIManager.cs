@@ -9,7 +9,8 @@ public class UIManager : MonoBehaviour
 {
     [Header("UI设置")]
     public GameObject textPrefab; // 文本预制体（需要有TextMeshPro组件）
-    public float textOffset = 0.1f; // 文本偏移倍数（相对于物品高度）
+    public float textOffset = 0.1f; // 文本偏移倍数（已弃用，现在使用fixedTextDistance）
+    public float fixedTextDistance = 1.0f; // 文本距离物品的固定距离
 
     [Header("渲染设置")]
     public string textSortingLayer = "UI"; // 文本的Sorting Layer名称
@@ -121,26 +122,28 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 计算文本偏移量（基于物品的sprite高度）
+    /// 计算文本偏移量（基于碰撞箱上边界，固定距离）
     /// </summary>
     /// <param name="item">物品</param>
     /// <returns>偏移量</returns>
     private Vector3 CalculateTextOffset(DraggableItem item)
     {
-        SpriteRenderer spriteRenderer = item.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null && spriteRenderer.sprite != null)
+        // 获取物品的碰撞器
+        Collider2D collider = item.GetComponent<Collider2D>();
+        if (collider != null)
         {
-            // 获取sprite的高度（考虑缩放）
-            float spriteHeight = spriteRenderer.sprite.bounds.size.y * item.transform.localScale.y;
-
-            // 计算偏移量
-            float offsetY = spriteHeight + textOffset;
-
-            return new Vector3(0, offsetY, 0);
+            // 获取碰撞箱的边界
+            Bounds bounds = collider.bounds;
+            
+            // 计算从物品中心到碰撞箱上边界的距离
+            float distanceToTop = bounds.max.y - item.transform.position.y;
+            
+            // 返回从碰撞箱上边界再向上固定距离的偏移
+            return new Vector3(0, distanceToTop + fixedTextDistance, 0);
         }
-
-        // 如果没有sprite，使用默认偏移
-        return new Vector3(0, 1, 0);
+        
+        // 如果没有碰撞器，使用默认固定距离
+        return new Vector3(0, fixedTextDistance, 0);
     }
 
     /// <summary>

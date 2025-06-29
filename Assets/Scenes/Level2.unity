@@ -414,7 +414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5711911682140555991, guid: 07b39695ae2eee2498ca0f266f03ac1b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6089385303679364880, guid: 07b39695ae2eee2498ca0f266f03ac1b, type: 3}
       propertyPath: m_Sprite
@@ -1577,7 +1577,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textPrefab: {fileID: 4073475971817277787, guid: c2701f3696855f54ba261b68a1f47ff0, type: 3}
-  textOffset: 0.1
+  textOffset: -1
+  fixedTextDistance: 0.5
   textSortingLayer: UI
   textSortingOrder: 10
 --- !u!4 &1284860744

@@ -22,8 +22,8 @@ MonoBehaviour:
   moveSpeed: 2
   settleTime: 20
   SnapRange: 0.5
-  prerequisiteItemId: -1
+  prerequisiteItemId: 10208
   needShake: 0
-  dialogue: 
+  dialogue: "\u6211\u4EEC\u8981\u653E\u5728\u8BB0\u4E8B\u672C\u4E0A\uFF01"
   leftLegPosition: {x: 0, y: 0}
   rightLegPosition: {x: 0, y: 0}
