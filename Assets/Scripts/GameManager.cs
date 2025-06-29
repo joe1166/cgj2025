@@ -223,7 +223,14 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentLevel < TotalLevels)
         {
-            LoadLevel(CurrentLevel + 1);
+            if (CurrentLevel == 3)
+            {
+                LoadLevel(9);
+            }
+            else
+            {
+                LoadLevel(CurrentLevel + 1);
+            }
         }
         else
         {
