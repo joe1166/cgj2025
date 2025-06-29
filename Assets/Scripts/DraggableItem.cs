@@ -103,7 +103,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         // 获取腿部管理器
         legsManager = GetComponent<LegsManager>();
-        
+
         // 等待一帧后更新腿的缩放，确保腿部已经创建完成
         StartCoroutine(UpdateLegsScaleAfterInit());
     }
@@ -388,7 +388,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (Time.time >= nextDialogueTime)
             {
                 // 随机说台词
-                ShowRandomDialogue();
+                // ShowRandomDialogue();
             }
         }
     }
