@@ -21,6 +21,14 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public string itemSortingLayer = "Item"; // 放置后的排序层
     public string itemMoveSortingLayer = "ItemMove"; // 移动时的排序层
 
+    [Header("音效设置")]
+    public string dragStartSound = "ItemDragStart"; // 拖拽开始音效
+    public string placeSuccessSound = "ItemPlaceSuccess"; // 放置成功音效
+    public string placeFailSound = "ItemPlaceFail"; // 放置失败音效
+    public float dragStartVolume = 0.8f; // 拖拽开始音量
+    public float placeSuccessVolume = 1.0f; // 放置成功音量
+    public float placeFailVolume = 0.7f; // 放置失败音量
+
     private Vector3 _offset;
     private float dialogueTimer = 0f; // 台词计时器
     private float nextDialogueTime = 0f; // 下次说台词的时间
@@ -196,6 +204,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (IsDragging || IsSnapped) return;
         IsDragging = true;
 
+        // 播放拖拽开始音效
+        PlayDragStartSound();
+
         // 切换到拖拽层
         SetSortingLayer(dragSortingLayer);
 
@@ -295,6 +306,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                     transform.position = closestPosition;
                     IsSnapped = true;
 
+                    // 播放放置成功音效
+                    PlayPlaceSuccessSound();
+
                     // 切换到物品层
                     SetSortingLayer(itemSortingLayer);
 
@@ -334,6 +348,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             else
             {
                 Debug.Log("不在物品的正确位置范围内或所有正确位置已被占用");
+                // 播放放置失败音效
+                PlayPlaceFailSound();
                 IsSnapped = false;
                 SetSortingLayer(itemMoveSortingLayer);
             }
@@ -488,6 +504,39 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (legsManager != null)
         {
             legsManager.UpdateAllLegsScale();
+        }
+    }
+
+    /// <summary>
+    /// 播放拖拽开始音效
+    /// </summary>
+    private void PlayDragStartSound()
+    {
+        if (AudioManager.Instance != null && !string.IsNullOrEmpty(dragStartSound))
+        {
+            AudioManager.Instance.PlaySFX(dragStartSound, dragStartVolume);
+        }
+    }
+
+    /// <summary>
+    /// 播放放置成功音效
+    /// </summary>
+    private void PlayPlaceSuccessSound()
+    {
+        if (AudioManager.Instance != null && !string.IsNullOrEmpty(placeSuccessSound))
+        {
+            AudioManager.Instance.PlaySFX(placeSuccessSound, placeSuccessVolume);
+        }
+    }
+
+    /// <summary>
+    /// 播放放置失败音效
+    /// </summary>
+    private void PlayPlaceFailSound()
+    {
+        if (AudioManager.Instance != null && !string.IsNullOrEmpty(placeFailSound))
+        {
+            AudioManager.Instance.PlaySFX(placeFailSound, placeFailVolume);
         }
     }
 }
