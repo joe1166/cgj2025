@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbfc6860e8482544f8db4674a58e137c, type: 3}
   m_Name: 10208
   m_EditorClassIdentifier: 
-  itemId: 10001
+  itemId: 10208
   itemName: 
   correctPositions:
   - {x: -4.74, y: -1.64}

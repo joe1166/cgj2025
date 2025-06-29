@@ -271,6 +271,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             foreach (Vector2 correctPos in ItemData.correctPositions)
             {
                 float distance = Vector2.Distance(transform.position, correctPos);
+                Debug.Log($"距离: {distance} 范围: {SnapRange} 正确位置: {closestDistance}");
                 if (distance <= SnapRange && distance < closestDistance)
                 {
                     // 检查该位置是否已被占用
@@ -279,6 +280,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                         closestPosition = correctPos;
                         closestDistance = distance;
                         foundValidPosition = true;
+                        Debug.Log($"找到有效位置: {closestPosition}");
                     }
                 }
             }

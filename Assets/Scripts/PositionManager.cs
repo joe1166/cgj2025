@@ -94,7 +94,7 @@ public class PositionManager : MonoBehaviour
     {
         foreach (Vector2 occupiedPos in occupiedPositions)
         {
-            if (Vector2.Distance(position, occupiedPos) <= snapRange)
+            if (Vector2.Distance(position, occupiedPos) <= 0.01f)
             {
                 return true; // 位置已被占用
             }
@@ -112,12 +112,12 @@ public class PositionManager : MonoBehaviour
     {
         foreach (Vector2 correctPos in correctPositions)
         {
-            if (Vector2.Distance(position, correctPos) <= snapRange)
+            if (Vector2.Distance(position, correctPos) <= 0.01f)
             {
                 // 检查该位置是否已被占用
                 foreach (Vector2 occupiedPos in occupiedPositions)
                 {
-                    if (Vector2.Distance(correctPos, occupiedPos) <= snapRange)
+                    if (Vector2.Distance(correctPos, occupiedPos) <= 0.01f)
                     {
                         return false; // 位置已被占用
                     }
