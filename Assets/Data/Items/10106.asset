@@ -21,7 +21,7 @@ MonoBehaviour:
   itemSprite: {fileID: 21300000, guid: 2b2885a21f6edcb43b301b1fe1b51343, type: 3}
   moveSpeed: 2
   settleTime: 20
-  SnapRange: 0.5
+  SnapRange: 1
   prerequisiteItemId: -1
   needShake: 0
   dialogue: 
