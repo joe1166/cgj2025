@@ -54,6 +54,7 @@ public class ConditionalDraggableItem : DraggableItem
         // 如果前置条件不满足，不允许拖拽
         if (!CheckPrerequisite())
         {
+            AudioManager.Instance.PlaySFX("ItemPlaceFail");
             return;
         }
 

@@ -260,6 +260,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (!settleConditionHook())
         {
             Debug.LogWarning("还没晕");
+            AudioManager.Instance.PlaySFX("ItemPlaceFail");
             ShowRandomDialogue();
             return;
         }
