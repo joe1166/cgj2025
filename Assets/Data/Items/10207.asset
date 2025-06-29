@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbfc6860e8482544f8db4674a58e137c, type: 3}
-  m_Name: 10101
+  m_Name: 10207
   m_EditorClassIdentifier: 
-  itemId: 10101
-  itemName: "\u786C\u5E01"
+  itemId: 10001
+  itemName: 
   correctPositions:
-  - {x: 3.59, y: -2.42}
-  - {x: 4.89, y: -2.42}
+  - {x: -3.07, y: 1.45}
   rotation: {x: 0, y: 0, z: 0, w: 1}
-  scale: {x: 1, y: 1, z: 1}
-  itemSprite: {fileID: 21300000, guid: 2cfabe4352e1f0540bfcf6bc3b80d83c, type: 3}
+  scale: {x: 0.95, y: 0.95, z: 1}
+  itemSprite: {fileID: 21300000, guid: c4c4a34d218c1494d8e5e20c4dd4e5c9, type: 3}
   moveSpeed: 2
   settleTime: 20
   SnapRange: 0.5
   prerequisiteItemId: -1
-  needShake: 0
-  dialogue: 
-  leftLegPosition: {x: 0, y: 0}
-  rightLegPosition: {x: 0, y: 0}
+  needShake: 1
+  dialogue: "\u6211\u5C31\u4E0D\u56DE\u53BB\uFF01"
+  leftLegPosition: {x: -0.2, y: -1}
+  rightLegPosition: {x: 0.8, y: -0.2}
