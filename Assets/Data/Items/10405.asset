@@ -19,11 +19,12 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 1}
   scale: {x: 0.7, y: 0.7, z: 1}
   itemSprite: {fileID: 21300000, guid: ac40df6bf856d4346ac7b019468148f8, type: 3}
-  moveSpeed: 2
-  settleTime: 20
+  moveSpeed: 5
+  settleTime: 10
   SnapRange: 0.5
   prerequisiteItemId: -1
   needShake: 0
   dialogue: 
+  hasLegs: 1
   leftLegPosition: {x: 0, y: 0}
   rightLegPosition: {x: 0, y: 0}

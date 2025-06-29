@@ -20,10 +20,11 @@ MonoBehaviour:
   scale: {x: 1.3, y: 1.3, z: 1}
   itemSprite: {fileID: 21300000, guid: eb317ed565de9a348a94c8e67a39ec4c, type: 3}
   moveSpeed: 2
-  settleTime: 10
+  settleTime: 20
   SnapRange: 0.5
   prerequisiteItemId: -1
   needShake: 0
   dialogue: 
+  hasLegs: 0
   leftLegPosition: {x: -1, y: -0.3}
   rightLegPosition: {x: 1, y: -0.3}

@@ -130,11 +130,11 @@ public class PositionManager : MonoBehaviour
     /// <param name="position">要检查的位置</param>
     /// <param name="snapRange">吸附范围</param>
     /// <returns>如果位置已被占用返回true，否则返回false</returns>
-    public bool IsPositionOccupied(Vector2 position, float snapRange)
+    public bool IsPositionOccupied(Vector2 position)
     {
         foreach (Vector2 occupiedPos in occupiedPositions)
         {
-            if (Vector2.Distance(position, occupiedPos) <= snapRange)
+            if (Vector2.Distance(position, occupiedPos) <= 0.01f)
             {
                 return true; // 位置已被占用
             }
@@ -148,16 +148,16 @@ public class PositionManager : MonoBehaviour
     /// <param name="position">要占用的位置</param>
     /// <param name="snapRange">吸附范围</param>
     /// <returns>是否成功占用位置</returns>
-    public bool OccupyPosition(Vector2 position, float snapRange)
+    public bool OccupyPosition(Vector2 position)
     {
         foreach (Vector2 correctPos in correctPositions)
         {
-            if (Vector2.Distance(position, correctPos) <= snapRange)
+            if (Vector2.Distance(position, correctPos) <= 0.01f)
             {
                 // 检查该位置是否已被占用
                 foreach (Vector2 occupiedPos in occupiedPositions)
                 {
-                    if (Vector2.Distance(correctPos, occupiedPos) <= snapRange)
+                    if (Vector2.Distance(correctPos, occupiedPos) <= 0.01f)
                     {
                         return false; // 位置已被占用
                     }

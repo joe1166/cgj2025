@@ -110,6 +110,8 @@ public class GameManager : MonoBehaviour
     {
         // 显示加载界面（黑屏）
         yield return StartCoroutine(FadeToBlack());
+        // 停止播放BGM
+        AudioManager.Instance.StopBGM();
 
         // 记录开始时间
         float startTime = Time.unscaledTime;
@@ -167,6 +169,16 @@ public class GameManager : MonoBehaviour
 
         // 隐藏加载界面（亮屏）
         Time.timeScale = 1f;
+        // 开始播放BGM
+        if (sceneName == "MainMenu")
+        {
+            AudioManager.Instance.PlayBGM("BGM_Lobby");
+        }
+        else
+        {
+            AudioManager.Instance.PlayBGM("BGM_Level");
+        }
+
         yield return StartCoroutine(FadeToClear());
     }
 
@@ -211,7 +223,14 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentLevel < TotalLevels)
         {
-            LoadLevel(CurrentLevel + 1);
+            if (CurrentLevel == 3)
+            {
+                LoadLevel(9);
+            }
+            else
+            {
+                LoadLevel(CurrentLevel + 1);
+            }
         }
         else
         {

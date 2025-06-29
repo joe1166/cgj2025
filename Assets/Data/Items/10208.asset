@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbfc6860e8482544f8db4674a58e137c, type: 3}
   m_Name: 10208
   m_EditorClassIdentifier: 
-  itemId: 10001
+  itemId: 10208
   itemName: 
   correctPositions:
   - {x: -4.74, y: -1.64}
@@ -20,7 +20,7 @@ MonoBehaviour:
   scale: {x: 0.144, y: 0.144, z: 1}
   itemSprite: {fileID: 21300000, guid: 66540422ee64fb5409e3f7b39bbb08de, type: 3}
   moveSpeed: 2
-  settleTime: 20
+  settleTime: 100
   SnapRange: 0.5
   prerequisiteItemId: -1
   needShake: 0
