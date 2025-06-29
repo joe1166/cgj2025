@@ -12,9 +12,6 @@ public class PauseUI : MonoBehaviour
     public Slider volumeSlider; // 音量控制滑块
     public Slider brightnessSlider; // 亮度控制滑块
 
-    [Header("亮度控制")]
-    public Image brightnessOverlay; // 用于控制亮度的全屏覆盖层（可选）
-
     private void Start()
     {
         // 初始化音量滑块
@@ -117,30 +114,62 @@ public class PauseUI : MonoBehaviour
     /// <param name="brightness">亮度值（0.2-1.0）</param>
     private void ApplyBrightness(float brightness)
     {
-        // 方法1：使用覆盖层UI Image（如果有的话）
-        if (brightnessOverlay != null)
-        {
-            Color overlayColor = brightnessOverlay.color;
-            // 亮度越低，覆盖层越暗（alpha越高）
-            overlayColor.a = 1f - brightness;
-            brightnessOverlay.color = overlayColor;
-        }
-
-        // 方法2：调整主摄像机的颜色（通用方法）
+        // 使用摄像机方法调整整体亮度
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
         {
-            // 使用Camera的backgroundColor来影响整体亮度
-            // 但这主要影响清屏颜色，对渲染内容影响有限
-            Color cameraColor = mainCamera.backgroundColor;
-            cameraColor = Color.Lerp(Color.black, Color.white, brightness);
-            // 注意：这种方法效果有限，建议使用覆盖层方法
+            // 保存摄像机原始设置（首次调用时）
+            string originalBgColorKey = "OriginalCameraBgColor";
+            if (!PlayerPrefs.HasKey(originalBgColorKey + "_R"))
+            {
+                Color originalBg = mainCamera.backgroundColor;
+                PlayerPrefs.SetFloat(originalBgColorKey + "_R", originalBg.r);
+                PlayerPrefs.SetFloat(originalBgColorKey + "_G", originalBg.g);
+                PlayerPrefs.SetFloat(originalBgColorKey + "_B", originalBg.b);
+                PlayerPrefs.SetFloat(originalBgColorKey + "_A", originalBg.a);
+            }
+
+            // 获取原始背景色
+            Color originalBgColor = new Color(
+                PlayerPrefs.GetFloat(originalBgColorKey + "_R"),
+                PlayerPrefs.GetFloat(originalBgColorKey + "_G"),
+                PlayerPrefs.GetFloat(originalBgColorKey + "_B"),
+                PlayerPrefs.GetFloat(originalBgColorKey + "_A")
+            );
+
+            // 根据亮度调整背景色
+            Color adjustedBgColor = originalBgColor * brightness;
+            mainCamera.backgroundColor = adjustedBgColor;
         }
 
-        // 方法3：使用全局光照调整（如果场景中有光源）
-        RenderSettings.ambientIntensity = brightness;
+        // 调整全局环境光
+        if (!PlayerPrefs.HasKey("OriginalAmbientIntensity"))
+        {
+            PlayerPrefs.SetFloat("OriginalAmbientIntensity", RenderSettings.ambientIntensity);
+        }
 
-        Debug.Log($"亮度已调整至: {brightness * 100f}%");
+        float originalAmbientIntensity = PlayerPrefs.GetFloat("OriginalAmbientIntensity");
+        RenderSettings.ambientIntensity = originalAmbientIntensity * brightness;
+
+        // 调整所有光源的强度
+        Light[] allLights = FindObjectsOfType<Light>();
+        foreach (Light light in allLights)
+        {
+            string lightKey = "OriginalLightIntensity_" + light.GetInstanceID();
+
+            // 保存原始光照强度
+            if (!PlayerPrefs.HasKey(lightKey))
+            {
+                PlayerPrefs.SetFloat(lightKey, light.intensity);
+            }
+
+            float originalIntensity = PlayerPrefs.GetFloat(lightKey);
+            light.intensity = originalIntensity * brightness;
+        }
+
+        Debug.Log($"摄像机亮度已调整至: {brightness * 100f}%");
+        Debug.Log($"环境光强度: {RenderSettings.ambientIntensity}");
+        Debug.Log($"摄像机背景色: {mainCamera.backgroundColor}");
     }
 
     private void OnDestroy()
