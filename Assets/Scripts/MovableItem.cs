@@ -13,11 +13,19 @@ public class MovableItem : MonoBehaviour
     private float minChangeDirTime = 1f;
     private float maxChangeDirTime = 3f;
 
+    [Header("音效设置")]
+    public string itemRunSound = "ItemRun"; // 物品跑动音效
+    public string settleEndSound = "SettleEnd"; // settle时间结束音效
+    public float itemRunVolume = 0.6f; // 跑动音效音量
+    public float settleEndVolume = 0.8f; // settle结束音效音量
+    public float runSoundInterval = 0.5f; // 跑动音效播放间隔
+
     private DraggableItem draggableItem;
     private float leftExtent;
     private float rightExtent;
     private float topExtent;
     private float bottomExtent;
+    private float lastRunSoundTime = 0f; // 上次播放跑动音效的时间
 
     public void Init()
     {
@@ -38,6 +46,9 @@ public class MovableItem : MonoBehaviour
             // 移动
             UnityEngine.Vector2 newPos = moveDirection * moveSpeed * Time.deltaTime;
             transform.Translate(newPos);
+
+            // 播放跑动音效
+            PlayRunSound();
 
             // 碰撞检测
             CheckScreenEdgeBounce();
@@ -62,6 +73,33 @@ public class MovableItem : MonoBehaviour
     }
 
     /// <summary>
+    /// 播放跑动音效
+    /// </summary>
+    private void PlayRunSound()
+    {
+        // 检查时间间隔，避免频繁播放
+        if (Time.time - lastRunSoundTime >= runSoundInterval)
+        {
+            if (AudioManager.Instance != null && !string.IsNullOrEmpty(itemRunSound))
+            {
+                AudioManager.Instance.PlaySFX(itemRunSound, itemRunVolume);
+                lastRunSoundTime = Time.time;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 播放settle结束音效
+    /// </summary>
+    private void PlaySettleEndSound()
+    {
+        if (AudioManager.Instance != null && !string.IsNullOrEmpty(settleEndSound))
+        {
+            AudioManager.Instance.PlaySFX(settleEndSound, settleEndVolume);
+        }
+    }
+
+    /// <summary>
     /// 释放位置并重置物品状态
     /// </summary>
     private void ReleasePosition()
@@ -71,6 +109,9 @@ public class MovableItem : MonoBehaviour
 
         if (positionManager != null && draggableItem != null)
         {
+            // 播放settle结束音效
+            PlaySettleEndSound();
+
             // 释放位置
             positionManager.ReleasePosition(transform.position);
 
