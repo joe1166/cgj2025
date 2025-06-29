@@ -117,12 +117,13 @@ public class LegsManager : MonoBehaviour
             leftLegInstance = Instantiate(leftLegPrefab, leftLegWorldPosition, Quaternion.identity, transform);
             leftLegAnimator = leftLegInstance.GetComponent<Animator>();
             leftLegRenderer = leftLegInstance.GetComponent<SpriteRenderer>();
-            
+
             // 改变渲染图层zindex
-            Debug.Log("legLayerBase");
-            Debug.Log(legLayerBase);
+            // Debug.Log("legLayerBase");
+            // Debug.Log(legLayerBase);
+
             leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder = legLayerBase + legLayerOffset;
-            Debug.Log(leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder);
+            // Debug.Log(leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder);
 
 
             if (leftLegAnimator == null)

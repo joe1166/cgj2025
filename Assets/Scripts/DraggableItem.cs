@@ -188,7 +188,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
-        // Debug.Log("OnBeginDrag called!");
+        Debug.Log("OnBeginDrag called!");
         // 防止二次拖拽或已吸附物品的拖拽
         if (IsDragging || IsSnapped) return;
         IsDragging = true;
