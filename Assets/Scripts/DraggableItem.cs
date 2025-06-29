@@ -275,7 +275,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 if (distance <= SnapRange && distance < closestDistance)
                 {
                     // 检查该位置是否已被占用
-                    if (!positionManager.IsPositionOccupied(correctPos, SnapRange))
+                    if (!positionManager.IsPositionOccupied(correctPos))
                     {
                         closestPosition = correctPos;
                         closestDistance = distance;
@@ -289,7 +289,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (foundValidPosition)
             {
                 // 占用该位置
-                if (positionManager.OccupyPosition(closestPosition, SnapRange))
+                if (positionManager.OccupyPosition(closestPosition))
                 {
                     transform.position = closestPosition;
                     IsSnapped = true;

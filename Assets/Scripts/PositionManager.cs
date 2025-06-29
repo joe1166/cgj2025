@@ -90,7 +90,7 @@ public class PositionManager : MonoBehaviour
     /// <param name="position">要检查的位置</param>
     /// <param name="snapRange">吸附范围</param>
     /// <returns>如果位置已被占用返回true，否则返回false</returns>
-    public bool IsPositionOccupied(Vector2 position, float snapRange)
+    public bool IsPositionOccupied(Vector2 position)
     {
         foreach (Vector2 occupiedPos in occupiedPositions)
         {
@@ -108,7 +108,7 @@ public class PositionManager : MonoBehaviour
     /// <param name="position">要占用的位置</param>
     /// <param name="snapRange">吸附范围</param>
     /// <returns>是否成功占用位置</returns>
-    public bool OccupyPosition(Vector2 position, float snapRange)
+    public bool OccupyPosition(Vector2 position)
     {
         foreach (Vector2 correctPos in correctPositions)
         {
