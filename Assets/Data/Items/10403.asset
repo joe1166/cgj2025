@@ -19,8 +19,8 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 1}
   scale: {x: 0.8, y: 0.8, z: 1}
   itemSprite: {fileID: 21300000, guid: c59c32c41eff2f9409a0edef86e38b42, type: 3}
-  moveSpeed: 2
-  settleTime: 20
+  moveSpeed: 5
+  settleTime: 10
   SnapRange: 0.5
   prerequisiteItemId: -1
   needShake: 0
