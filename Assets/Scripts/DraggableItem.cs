@@ -103,6 +103,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         // 获取腿部管理器
         legsManager = GetComponent<LegsManager>();
+        
+        // 等待一帧后更新腿的缩放，确保腿部已经创建完成
+        StartCoroutine(UpdateLegsScaleAfterInit());
     }
 
     private void SetupPolygonCollider()
@@ -462,6 +465,26 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (collider != null)
         {
             collider.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// 更新腿的缩放，使其不受物品缩放影响
+    /// </summary>
+    public void UpdateLegsScale()
+    {
+        if (legsManager != null)
+        {
+            legsManager.UpdateAllLegsScale();
+        }
+    }
+
+    private IEnumerator UpdateLegsScaleAfterInit()
+    {
+        yield return null;
+        if (legsManager != null)
+        {
+            legsManager.UpdateAllLegsScale();
         }
     }
 }

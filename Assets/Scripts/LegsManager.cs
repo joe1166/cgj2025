@@ -124,6 +124,8 @@ public class LegsManager : MonoBehaviour
             leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder = legLayerBase + legLayerOffset;
             Debug.Log(leftLegInstance.GetComponent<SpriteRenderer>().sortingOrder);
 
+            // 设置腿的缩放，使其不受父对象缩放影响
+            UpdateLegScale(leftLegInstance);
 
             if (leftLegAnimator == null)
             {
@@ -142,6 +144,9 @@ public class LegsManager : MonoBehaviour
             // 改变渲染图层zindex
             rightLegInstance.GetComponent<SpriteRenderer>().sortingOrder = legLayerBase + legLayerOffset;
 
+            // 设置腿的缩放，使其不受父对象缩放影响
+            UpdateLegScale(rightLegInstance);
+
             if (rightLegAnimator == null)
             {
                 Debug.LogWarning($"LegsManager: 右腿预制体上没有找到Animator组件！");
@@ -158,6 +163,34 @@ public class LegsManager : MonoBehaviour
         SetState(LegsState.Moving);
 
         Debug.Log($"LegsManager: 成功创建腿部实例");
+    }
+
+    /// <summary>
+    /// 更新腿的缩放，使其不受父对象缩放影响
+    /// </summary>
+    /// <param name="legInstance">腿的实例</param>
+    private void UpdateLegScale(GameObject legInstance)
+    {
+        if (legInstance != null)
+        {
+            // 获取父对象的缩放
+            Vector3 parentScale = transform.localScale;
+            
+            // 计算腿应该的缩放，使其看起来保持原始大小
+            Vector3 legScale = new Vector3(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z);
+            
+            // 应用缩放
+            legInstance.transform.localScale = legScale;
+        }
+    }
+
+    /// <summary>
+    /// 更新所有腿的缩放
+    /// </summary>
+    public void UpdateAllLegsScale()
+    {
+        UpdateLegScale(leftLegInstance);
+        UpdateLegScale(rightLegInstance);
     }
 
     /// <summary>
