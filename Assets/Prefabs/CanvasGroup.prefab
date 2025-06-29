@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 1888137700853379040}
   - component: {fileID: 8119836309590656756}
   - component: {fileID: 7597434326046407910}
+  - component: {fileID: 6611083195820574472}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -156,6 +157,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6611083195820574472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447747528788496410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &452412621684161406
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +322,7 @@ GameObject:
   - component: {fileID: 1117157413734025339}
   - component: {fileID: 3831951929000965892}
   - component: {fileID: 2050466301741590425}
+  - component: {fileID: 9025466704741501833}
   m_Layer: 5
   m_Name: NextLevelButton
   m_TagString: Untagged
@@ -413,6 +432,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9025466704741501833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508438419880704702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &603143729767160734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1270,7 @@ GameObject:
   - component: {fileID: 5651028212624125867}
   - component: {fileID: 561578983174403636}
   - component: {fileID: 3481075932122034952}
+  - component: {fileID: 6607854847838671936}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -1342,6 +1379,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6607854847838671936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2570957224850918992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &2614865727531711686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2001,6 +2055,7 @@ GameObject:
   - component: {fileID: 8424424455938410087}
   - component: {fileID: 8962143374188919923}
   - component: {fileID: 7817128954593330952}
+  - component: {fileID: 6073540396465763631}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -2110,6 +2165,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6073540396465763631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6673602123687490473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &7263815778239615022
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,6 +2194,7 @@ GameObject:
   - component: {fileID: 5579008914558496367}
   - component: {fileID: 5123473448487939942}
   - component: {fileID: 7564249387242249115}
+  - component: {fileID: 2542083381687249111}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -2230,6 +2303,23 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2542083381687249111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7263815778239615022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &8299232570053179470
 GameObject:
   m_ObjectHideFlags: 0
@@ -2328,6 +2418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeText: {fileID: 2627351795858317289}
   volumeSlider: {fileID: 7576725471172666603}
+  brightnessSlider: {fileID: 0}
+  brightnessOverlay: {fileID: 0}
 --- !u!1 &9088317286660770498
 GameObject:
   m_ObjectHideFlags: 0
