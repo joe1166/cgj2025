@@ -16,13 +16,52 @@ public class PositionManager : MonoBehaviour
     public GameObject conditionalItemPrefab; // 条件物品预制体（需要有ConditionalDraggableItem组件）
     public GameObject shakableItemPrefab;
     public List<ItemData> levelItems = new List<ItemData>(); // 当前关卡会用到的所有ItemData
+    public List<DraggableItem> levelItemsInstances = new List<DraggableItem>(); // 当前关卡所有Item(根据ItemData生成)
 
     private List<Vector2> occupiedPositions = new List<Vector2>(); // 已被占用的位置
+    private float timer = 5f;
+    // private int baseSortingOrder = 
 
     private void Start()
     {
         // 创建关卡中的所有物品
         CreateLevelItems();
+    }
+
+    public void HideAll()
+    {
+        PauseAll();
+        foreach (var obj in levelItemsInstances)
+        {
+            obj.gameObject.SetActive(false);
+        }
+    }
+
+    public void PauseAll()
+    {
+        foreach (var obj in levelItemsInstances)
+        {
+            obj.SetSortingLayer("BG");
+            obj.IsPaused = true;
+        }
+    }
+
+    public void UnPauseAll()
+    {
+        foreach (var obj in levelItemsInstances)
+        {
+            obj.IsPaused = false;
+            // TODO 加判定
+            if (obj.IsSnapped)
+            {
+                obj.SetSortingLayer(obj.itemSortingLayer);
+            }
+            else
+            {
+                obj.SetSortingLayer(obj.itemMoveSortingLayer);
+            }
+        }
+
     }
 
     /// <summary>
@@ -75,9 +114,10 @@ public class PositionManager : MonoBehaviour
 
             // 设置ItemData并初始化
             draggableItem.ItemData = itemData;
-            draggableItem.Init();
+            draggableItem.Init(this);
 
             Debug.Log($"成功创建物品: {itemData.itemName}");
+            levelItemsInstances.Add(draggableItem);
             count += 1;
         }
 
@@ -161,5 +201,20 @@ public class PositionManager : MonoBehaviour
     {
         // 检查关卡中所有可能的正确位置是否都被占用
         return occupiedPositions.Count >= correctPositions.Count && correctPositions.Count > 0;
+    }
+
+    public virtual void CheckLevelCompletion()
+    {
+        // 检查关卡中所有可能的正确位置是否都被占用
+        if (IsLevelComplete())
+        {
+            Debug.Log("关卡完成！");
+            // 通知关卡控制器
+            LevelController levelController = FindObjectOfType<LevelController>();
+            if (levelController != null)
+            {
+                levelController.CompleteLevel();
+            }
+        }
     }
 }

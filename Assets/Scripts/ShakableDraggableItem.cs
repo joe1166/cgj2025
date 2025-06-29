@@ -37,9 +37,9 @@ public class ShakableDraggableItem : DraggableItem
     }
 
 
-    public override void Init()
+    public override void Init(PositionManager manager)
     {
-        base.Init();
+        base.Init(manager);
 
         lastMousePosition = Input.mousePosition;
     }

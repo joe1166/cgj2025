@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum ItemEvents
+{
+    EVENT_pauseStart,     // 暂停
+    EVENT_pauseEnd,   // 继续
+}
+
 [RequireComponent(typeof(SpriteRenderer))]
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    private PositionManager myManager;
+
     public ItemData ItemData; // 物品数据ScriptableObject
     public float SnapRange = 0.5f; // 吸附范围
-    public bool IsSnapped = false;  // 正确吸附属性
+    public bool IsSnapped { get; private set; } = false;  // 正确吸附属性
     public bool IsDragging = false;
 
     [Header("台词设置")]
@@ -20,6 +28,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public string dragSortingLayer = "Drag"; // 拖拽时的排序层
     public string itemSortingLayer = "Item"; // 放置后的排序层
     public string itemMoveSortingLayer = "ItemMove"; // 移动时的排序层
+    // public string bgSortingLayer = "BG"; // 最底层的排序层
 
     private Vector3 _offset;
     private float dialogueTimer = 0f; // 台词计时器
@@ -34,8 +43,54 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public float TopExtent { get; private set; }
     public float BottomExtent { get; private set; }
 
-    public virtual void Init()
+    private bool _isPaused;
+    public bool IsPaused {
+        get=> _isPaused;
+        set{
+            // Debug.Log("item：暂停了元素！");
+
+            _isPaused = value;
+            if (value){
+                // 使不可点击（2D物体）
+                var colliders = GetComponentsInChildren<Collider2D>();
+                foreach (var col in colliders){
+                    col.enabled = false;
+                }
+                // 使相关表现与逻辑暂停
+                broadcast(ItemEvents.EVENT_pauseStart);
+            }
+            else{
+                // 使可点击（2D物体）
+                if (!IsSnapped){
+                    var colliders = GetComponentsInChildren<Collider2D>();
+                    foreach (var col in colliders){
+                        col.enabled = true;
+                    }
+                }
+                // 使相关表现与逻辑恢复
+                broadcast(ItemEvents.EVENT_pauseEnd);
+
+            }
+        }
+    }
+
+    private void broadcast(ItemEvents eventType)
     {
+        switch (eventType)
+        {
+            case ItemEvents.EVENT_pauseStart:
+                legsManager.PauseAnimation();
+                break;
+            case ItemEvents.EVENT_pauseEnd:
+                legsManager.ResumeAnimation();
+                break;
+        }
+
+    }
+
+    public virtual void Init(PositionManager manager)
+    {
+        myManager = manager;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (spriteRenderer == null)
@@ -253,8 +308,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
 
         // 获取位置管理器
-        PositionManager positionManager = FindObjectOfType<PositionManager>();
-        if (positionManager == null)
+        // PositionManager myManager = FindObjectOfType<PositionManager>();
+        if (myManager == null)
         {
             Debug.LogError("找不到PositionManager！");
             return;
@@ -274,7 +329,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 if (distance <= SnapRange && distance < closestDistance)
                 {
                     // 检查该位置是否已被占用
-                    if (!positionManager.IsPositionOccupied(correctPos, SnapRange))
+                    if (!myManager.IsPositionOccupied(correctPos, SnapRange))
                     {
                         closestPosition = correctPos;
                         closestDistance = distance;
@@ -287,7 +342,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (foundValidPosition)
             {
                 // 占用该位置
-                if (positionManager.OccupyPosition(closestPosition, SnapRange))
+                if (myManager.OccupyPosition(closestPosition, SnapRange))
                 {
                     transform.position = closestPosition;
                     IsSnapped = true;
@@ -309,17 +364,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
                     Debug.Log($"物品 {ItemData.itemName} 成功放置到位置 {closestPosition}");
 
-                    // 检查关卡是否完成
-                    if (positionManager.IsLevelComplete())
-                    {
-                        Debug.Log("关卡完成！");
-                        // 通知关卡控制器
-                        LevelController levelController = FindObjectOfType<LevelController>();
-                        if (levelController != null)
-                        {
-                            levelController.CompleteLevel();
-                        }
-                    }
+                    myManager.CheckLevelCompletion();
+                    // // 检查关卡是否完成
+                    // if (myManager.IsLevelComplete())
+                    // {
+                    //     Debug.Log("关卡完成！");
+                    //     // 通知关卡控制器
+                    //     LevelController levelController = FindObjectOfType<LevelController>();
+                    //     if (levelController != null)
+                    //     {
+                    //         levelController.CompleteLevel();
+                    //     }
+                    // }
                 }
                 else
                 {
@@ -395,7 +451,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public virtual bool CanMove()
     {
-        bool unmovableConditions = (IsDragging || IsSnapped);
+        bool unmovableConditions = (_isPaused || IsDragging || IsSnapped);
         bool canMove = !unmovableConditions;
         return canMove;
     }
@@ -435,12 +491,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     /// 设置排序层
     /// </summary>
     /// <param name="sortingLayer">排序层名称</param>
-    private void SetSortingLayer(string sortingLayer)
+    public void SetSortingLayer(string sortingLayer)
     {
         if (spriteRenderer != null)
         {
+            Debug.Log(sortingLayer);
             spriteRenderer.sortingLayerName = sortingLayer;
             Debug.Log($"物品 {ItemData?.itemName} 切换到排序层: {sortingLayer}");
+        }
+        else
+        {
+            Debug.Log($"物品 {ItemData?.itemName} 切换图层失败！");
+
         }
     }
 
