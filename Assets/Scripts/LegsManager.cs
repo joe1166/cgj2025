@@ -54,9 +54,21 @@ public class LegsManager : MonoBehaviour
     // 状态机事件
     public System.Action<LegsState> OnStateChanged;
 
+    // 静态事件 - 用于全局控制腿的显示/隐藏
+    public static System.Action<bool> OnToggleLegsVisibility;
 
     public int legLayerBase;
     public int legLayerOffset = 1;
+
+    // 腿部显示控制
+    private static bool globalLegsVisible = true; // 全局腿部显示开关
+    private bool localLegsVisible = true; // 当前物体的腿部状态
+
+    private void Awake()
+    {
+        // 订阅全局腿部显示事件
+        OnToggleLegsVisibility += OnLegsVisibilityChanged;
+    }
 
     private void Start()
     {
@@ -276,21 +288,44 @@ public class LegsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 显示或隐藏腿部
+    /// 响应全局腿部显示切换事件
+    /// </summary>
+    /// <param name="visible">是否显示腿部</param>
+    private void OnLegsVisibilityChanged(bool visible)
+    {
+        globalLegsVisible = visible;
+        UpdateLegsVisibility();
+        Debug.Log($"LegsManager: 收到全局腿部显示事件 - {(visible ? "显示" : "隐藏")}");
+    }
+
+    /// <summary>
+    /// 更新腿部显示状态（同时考虑全局和本地状态）
+    /// </summary>
+    private void UpdateLegsVisibility()
+    {
+        // 只有在全局开启且本地状态允许时才显示腿部
+        bool shouldShow = globalLegsVisible && localLegsVisible;
+
+        if (leftLegInstance != null)
+        {
+            leftLegInstance.SetActive(shouldShow);
+        }
+        if (rightLegInstance != null)
+        {
+            rightLegInstance.SetActive(shouldShow);
+        }
+    }
+
+    /// <summary>
+    /// 显示或隐藏腿部（修改后的版本，考虑全局开关）
     /// </summary>
     /// <param name="show">是否显示</param>
     public void ShowLegs(bool show)
     {
-        if (leftLegInstance != null)
-        {
-            leftLegInstance.SetActive(show);
-        }
-        if (rightLegInstance != null)
-        {
-            rightLegInstance.SetActive(show);
-        }
+        localLegsVisible = show;
+        UpdateLegsVisibility();
 
-        Debug.Log($"LegsManager: {(show ? "显示" : "隐藏")}腿部");
+        Debug.Log($"LegsManager: {(show ? "显示" : "隐藏")}腿部 (本地状态)");
     }
 
     /// <summary>
@@ -412,6 +447,9 @@ public class LegsManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        // 取消订阅事件，避免内存泄漏
+        OnToggleLegsVisibility -= OnLegsVisibilityChanged;
+
         // 确保在销毁时清理腿部实例
         if (leftLegInstance != null)
         {

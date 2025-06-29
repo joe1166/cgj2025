@@ -25,5 +25,6 @@ MonoBehaviour:
   prerequisiteItemId: -1
   needShake: 1
   dialogue: "\u4E0D\u5F04\u6655\u6211\u6211\u662F\u4E0D\u4F1A\u56DE\u53BB\u7684\uFF01"
+  hasLegs: 1
   leftLegPosition: {x: -0.2, y: -1}
   rightLegPosition: {x: 0.8, y: -0.2}

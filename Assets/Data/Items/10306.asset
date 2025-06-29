@@ -27,6 +27,6 @@ MonoBehaviour:
   prerequisiteItemId: 10305
   needShake: 0
   dialogue: "\u6211\u5F97\u5EFA\u5728\u7FBD\u6BDB\u7403\u573A\u4E0A\u5566"
-  hasLegs: 0
+  hasLegs: 1
   leftLegPosition: {x: 0, y: 0}
   rightLegPosition: {x: 0, y: 0}

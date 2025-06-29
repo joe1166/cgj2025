@@ -25,6 +25,6 @@ MonoBehaviour:
   prerequisiteItemId: -1
   needShake: 0
   dialogue: 
-  hasLegs: 0
+  hasLegs: 1
   leftLegPosition: {x: -1, y: -1.5}
   rightLegPosition: {x: 0, y: -1.5}

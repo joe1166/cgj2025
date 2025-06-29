@@ -11,6 +11,13 @@ public class PauseUI : MonoBehaviour
     public TextMeshProUGUI timeText; // 显示当前用时的文本
     public Slider volumeSlider; // 音量控制滑块
     public Slider brightnessSlider; // 亮度控制滑块
+    public Button toggleLegsButton; // 切换腿部显示的按钮
+
+    [Header("腿部控制")]
+    public TextMeshProUGUI legsButtonText; // 按钮上的文字
+
+    // 腿部显示状态
+    private bool legsVisible = true;
 
     private void Start()
     {
@@ -19,6 +26,9 @@ public class PauseUI : MonoBehaviour
 
         // 初始化亮度滑块
         InitializeBrightnessSlider();
+
+        // 初始化腿部切换按钮
+        InitializeLegsToggleButton();
     }
 
     private void Update()
@@ -69,6 +79,74 @@ public class PauseUI : MonoBehaviour
 
             // 添加事件监听
             brightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
+        }
+    }
+
+    /// <summary>
+    /// 初始化腿部切换按钮
+    /// </summary>
+    private void InitializeLegsToggleButton()
+    {
+        if (toggleLegsButton != null)
+        {
+            // 从PlayerPrefs读取保存的腿部显示状态
+            legsVisible = PlayerPrefs.GetInt("LegsVisible", 1) == 1;
+
+            // 添加按钮点击事件
+            toggleLegsButton.onClick.AddListener(ToggleLegsVisibility);
+
+            // 更新按钮文字
+            UpdateLegsButtonText();
+
+            // 发送初始状态
+            LegsManager.OnToggleLegsVisibility?.Invoke(legsVisible);
+        }
+    }
+
+    /// <summary>
+    /// 切换腿部显示状态
+    /// </summary>
+    public void ToggleLegsVisibility()
+    {
+        legsVisible = !legsVisible;
+
+        // 发送事件给所有LegsManager
+        LegsManager.OnToggleLegsVisibility?.Invoke(legsVisible);
+
+        // 保存设置
+        PlayerPrefs.SetInt("LegsVisible", legsVisible ? 1 : 0);
+        PlayerPrefs.Save();
+
+        // 更新按钮文字
+        UpdateLegsButtonText();
+
+        Debug.Log($"PauseUI: 切换腿部显示状态 - {(legsVisible ? "显示" : "隐藏")}");
+    }
+
+    /// <summary>
+    /// 更新按钮文字
+    /// </summary>
+    private void UpdateLegsButtonText()
+    {
+        if (legsButtonText != null)
+        {
+            legsButtonText.text = legsVisible ? "隐藏腿部" : "显示腿部";
+        }
+        else if (toggleLegsButton != null)
+        {
+            // 如果没有单独的文字组件，尝试获取按钮内的Text组件
+            Text buttonText = toggleLegsButton.GetComponentInChildren<Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = legsVisible ? "隐藏腿部" : "显示腿部";
+            }
+
+            // 或者尝试获取TextMeshPro组件
+            TextMeshProUGUI tmpText = toggleLegsButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmpText != null)
+            {
+                tmpText.text = legsVisible ? "隐藏腿部" : "显示腿部";
+            }
         }
     }
 
@@ -183,6 +261,11 @@ public class PauseUI : MonoBehaviour
         if (brightnessSlider != null)
         {
             brightnessSlider.onValueChanged.RemoveListener(OnBrightnessChanged);
+        }
+
+        if (toggleLegsButton != null)
+        {
+            toggleLegsButton.onClick.RemoveListener(ToggleLegsVisibility);
         }
     }
 }
