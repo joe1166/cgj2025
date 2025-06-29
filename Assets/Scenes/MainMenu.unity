@@ -1960,6 +1960,7 @@ GameObject:
   - component: {fileID: 1464516996}
   - component: {fileID: 1464516995}
   - component: {fileID: 1464516994}
+  - component: {fileID: 1464516997}
   m_Layer: 5
   m_Name: Level3
   m_TagString: Untagged
@@ -2081,6 +2082,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1464516992}
   m_CullTransparentMesh: 1
+--- !u!114 &1464516997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464516992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &1465469294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2227,6 +2245,7 @@ GameObject:
   - component: {fileID: 1610446696}
   - component: {fileID: 1610446695}
   - component: {fileID: 1610446694}
+  - component: {fileID: 1610446697}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -2336,6 +2355,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610446692}
   m_CullTransparentMesh: 1
+--- !u!114 &1610446697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610446692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &1736337667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2348,6 +2384,7 @@ GameObject:
   - component: {fileID: 1736337671}
   - component: {fileID: 1736337670}
   - component: {fileID: 1736337669}
+  - component: {fileID: 1736337672}
   m_Layer: 5
   m_Name: Level1
   m_TagString: Untagged
@@ -2469,6 +2506,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736337667}
   m_CullTransparentMesh: 1
+--- !u!114 &1736337672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736337667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
 --- !u!1 &1801507663
 GameObject:
   m_ObjectHideFlags: 0
@@ -2750,7 +2804,22 @@ MonoBehaviour:
   bgmClips:
   - {fileID: 8300000, guid: b6e36e72bbe994047817b8eab053e997, type: 3}
   - {fileID: 8300000, guid: 2237c3294a4f96748a965ca918374120, type: 3}
-  sfxClips: []
+  sfxClips:
+  - {fileID: 8300000, guid: 7a6ef03bac373574980c96a836520a7c, type: 3}
+  - {fileID: 8300000, guid: d9a95bcf756212f4aa5e64f974d85b8e, type: 3}
+  - {fileID: 8300000, guid: 8baf311bae3985746b8718288ae2fa21, type: 3}
+  - {fileID: 8300000, guid: cdfc5007ce6890d4d987d0e37e80608c, type: 3}
+  - {fileID: 8300000, guid: dbf2c490f8f27494eb7d94e2f7256d05, type: 3}
+  - {fileID: 8300000, guid: 17fde7b42034a904ab0aa11c9ef006f1, type: 3}
+  - {fileID: 8300000, guid: 934ef4cfc9d0e224d8637eb761af5d2a, type: 3}
+  - {fileID: 8300000, guid: c8e7ec9b73f2e6b4e983733984a5f0ef, type: 3}
+  - {fileID: 8300000, guid: 0fe19e1441cb9fb4a8694b8f9fcfb3ee, type: 3}
+  - {fileID: 8300000, guid: 2c9869ce1812dab4693675fc6f106a91, type: 3}
+  - {fileID: 8300000, guid: c6e7eb23be8ede94dada6e93d1821980, type: 3}
+  - {fileID: 8300000, guid: 7b74aab452691b849a92e0bf96e644db, type: 3}
+  - {fileID: 8300000, guid: efa226c37ff5f6c4b8bada62d4484c09, type: 3}
+  - {fileID: 8300000, guid: 305fcb58dc1a52942ae01c84dd996f75, type: 3}
+  - {fileID: 8300000, guid: f1954dee2e7614447b53b35a1548eab7, type: 3}
   fadeTime: 1
 --- !u!4 &1850637173
 Transform:
@@ -2779,6 +2848,7 @@ GameObject:
   - component: {fileID: 1906535407}
   - component: {fileID: 1906535406}
   - component: {fileID: 1906535405}
+  - component: {fileID: 1906535408}
   m_Layer: 5
   m_Name: Level2
   m_TagString: Untagged
@@ -2900,6 +2970,73 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906535403}
   m_CullTransparentMesh: 1
+--- !u!114 &1906535408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906535403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e620a028eece439ae2b14336c2cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSoundName: ButtonHover
+  clickSoundName: ButtonClick
+  hoverVolume: 0.8
+  clickVolume: 1
+  hoverCooldown: 0.1
+--- !u!1 &2054735285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2054735287}
+  - component: {fileID: 2054735286}
+  m_Layer: 0
+  m_Name: ButtonSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2054735286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054735285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bdb909fda8765044a8238b5c3edaa5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSetupOnStart: 1
+  setupOnEnable: 0
+  defaultHoverSound: ButtonHover
+  defaultClickSound: ButtonClick
+  defaultHoverVolume: 0.8
+  defaultClickVolume: 1
+--- !u!4 &2054735287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054735285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.7365544, y: -1.2961555, z: 0.009506356}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2077590450
 GameObject:
   m_ObjectHideFlags: 0
@@ -3041,3 +3178,4 @@ SceneRoots:
   - {fileID: 1810328520}
   - {fileID: 1096968981}
   - {fileID: 1850637173}
+  - {fileID: 2054735287}
