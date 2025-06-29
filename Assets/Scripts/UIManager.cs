@@ -134,14 +134,14 @@ public class UIManager : MonoBehaviour
         {
             // 获取碰撞箱的边界
             Bounds bounds = collider.bounds;
-            
+
             // 计算从物品中心到碰撞箱上边界的距离
             float distanceToTop = bounds.max.y - item.transform.position.y;
-            
+
             // 返回从碰撞箱上边界再向上固定距离的偏移
             return new Vector3(0, distanceToTop + fixedTextDistance, 0);
         }
-        
+
         // 如果没有碰撞器，使用默认固定距离
         return new Vector3(0, fixedTextDistance, 0);
     }
