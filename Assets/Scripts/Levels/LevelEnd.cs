@@ -113,7 +113,7 @@ public class LevelEnd : MonoBehaviour
 
         // 计算移动距离，距离越近移动越快
         float moveMultiplier = 0;
-        if (distance < detectionRadius * 3)
+        if (distance < detectionRadius * 5)
         {
             moveMultiplier = Mathf.Max(3f, Mathf.Sqrt(detectionRadius / distance));
         }
