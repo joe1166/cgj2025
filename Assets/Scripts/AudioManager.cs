@@ -406,8 +406,17 @@ public class AudioManager : MonoBehaviour
     /// <param name="volume">音量值（0-1）</param>
     public void SetMasterVolume(float volume)
     {
+        float oldMasterVolume = masterVolume;
         masterVolume = Mathf.Clamp01(volume);
         UpdateVolumes();
+
+        // 如果BGM正在淡入淡出，也需要按比例调整当前音量
+        if (currentFadeCoroutine != null && bgmAudioSource != null && oldMasterVolume > 0)
+        {
+            // 按音量变化比例调整当前音量
+            float ratio = masterVolume / oldMasterVolume;
+            bgmAudioSource.volume *= ratio;
+        }
     }
 
     /// <summary>
@@ -416,8 +425,19 @@ public class AudioManager : MonoBehaviour
     /// <param name="volume">音量值（0-1）</param>
     public void SetBGMVolume(float volume)
     {
+        float oldTargetVolume = bgmVolume * masterVolume;
         bgmVolume = Mathf.Clamp01(volume);
+        float newTargetVolume = bgmVolume * masterVolume;
+
         UpdateVolumes();
+
+        // 如果BGM正在淡入淡出，也需要调整当前音量
+        if (currentFadeCoroutine != null && bgmAudioSource != null && oldTargetVolume > 0)
+        {
+            // 按比例调整当前音量
+            float ratio = newTargetVolume / oldTargetVolume;
+            bgmAudioSource.volume *= ratio;
+        }
     }
 
     /// <summary>
@@ -439,6 +459,11 @@ public class AudioManager : MonoBehaviour
             {
                 bgmAudioSource.volume = bgmVolume * masterVolume;
             }
+            else
+            {
+                // 如果正在淡入淡出，我们需要重新启动协程以应用新的音量设置
+                Debug.Log("BGM正在淡入淡出，重新调整目标音量");
+            }
         }
 
         if (sfxAudioSources != null)
@@ -450,6 +475,17 @@ public class AudioManager : MonoBehaviour
                     source.volume = sfxVolume * masterVolume;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 强制更新BGM音量（即使在淡入淡出过程中）
+    /// </summary>
+    public void ForceUpdateBGMVolume()
+    {
+        if (bgmAudioSource != null)
+        {
+            bgmAudioSource.volume = bgmVolume * masterVolume;
         }
     }
 
