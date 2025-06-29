@@ -20,7 +20,7 @@ MonoBehaviour:
   scale: {x: 1, y: 1, z: 1}
   itemSprite: {fileID: 21300000, guid: 2031aa26796e60c42b6de0048efdc1e7, type: 3}
   moveSpeed: 2
-  settleTime: 20
+  settleTime: 30
   SnapRange: 0.5
   prerequisiteItemId: -1
   needShake: 0
