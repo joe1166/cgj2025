@@ -24,6 +24,7 @@ public class ItemData : ScriptableObject
     public string dialogue = ""; // 物品的台词
 
     [Header("腿设置")]
+    public bool hasLegs = false;
     public Vector2 leftLegPosition = Vector2.zero; // 左腿位置
     public Vector2 rightLegPosition = Vector2.zero; // 右腿位置
 }

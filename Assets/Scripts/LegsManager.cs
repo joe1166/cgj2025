@@ -62,6 +62,12 @@ public class LegsManager : MonoBehaviour
     {
         // 获取相关组件
         draggableItem = GetComponent<DraggableItem>();
+
+        if (!draggableItem.ItemData.hasLegs)
+        {
+            return;
+        }
+
         legLayerBase = GetComponent<SpriteRenderer>().sortingOrder;
 
         movableItem = GetComponent<MovableItem>();
@@ -176,10 +182,10 @@ public class LegsManager : MonoBehaviour
         {
             // 获取父对象的缩放
             Vector3 parentScale = transform.localScale;
-            
+
             // 计算腿应该的缩放，使其看起来保持原始大小
             Vector3 legScale = new Vector3(1f / parentScale.x, 1f / parentScale.y, 1f / parentScale.z);
-            
+
             // 应用缩放
             legInstance.transform.localScale = legScale;
         }
