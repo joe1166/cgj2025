@@ -299,7 +299,7 @@ public class Level0Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public virtual void OnDrag(PointerEventData eventData)
     {
         Vector3 cursorPoint = Camera.main.ScreenToWorldPoint(eventData.position);
-        cursorPoint.z = transform.position.z;
+        cursorPoint.z = 0;
         transform.position = cursorPoint + _offset;
     }
 
